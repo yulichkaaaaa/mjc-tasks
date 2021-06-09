@@ -30,9 +30,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
-        source.setBasename("classpath:error_messages");
+        source.setBasename("classpath:errors");
         source.setDefaultEncoding("UTF-8");
         return source;
     }
-
 }

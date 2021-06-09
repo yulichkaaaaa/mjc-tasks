@@ -2,9 +2,12 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.service.GiftCertificateService;
+import com.epam.esm.service.LocaleService;
+import com.epam.esm.validator.GiftCertificateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.Errors;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,10 +17,28 @@ import javax.validation.Valid;
 public class GiftCertificateController {
 
     private GiftCertificateService giftCertificateService;
+    private GiftCertificateValidator giftCertificateValidator;
+    private LocaleService localeService;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(giftCertificateValidator);
+    }
 
     @Autowired
     public void setGiftCertificateService(GiftCertificateService giftCertificateService) {
         this.giftCertificateService = giftCertificateService;
+    }
+
+    @Autowired
+    public void setGiftCertificateValidator(GiftCertificateValidator giftCertificateValidator) {
+        this.giftCertificateValidator = giftCertificateValidator;
+    }
+
+    @Autowired
+    public void setLocaleService(LocaleService localeService) {
+
+        this.localeService = localeService;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -37,22 +58,24 @@ public class GiftCertificateController {
 
     @RequestMapping(value = "{/id}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGiftCertificate(@PathVariable long id,
+    public GiftCertificateDto createGiftCertificate(@PathVariable long id,
                                       @Valid GiftCertificateDto giftCertificateDto,
-                                      Errors errors){
-        if (errors.hasErrors()) {
-            //throw new
+                                                    BindingResult bindingResult){
+        if (!bindingResult.hasErrors()) {
+            bindingResult.getAllErrors();
+            giftCertificateDto.setId(id);
+            giftCertificateService.createGiftCertificate(giftCertificateDto);
         }
-        giftCertificateDto.setId(id);
-        giftCertificateService.createGiftCertificate(giftCertificateDto);
+        return giftCertificateDto;
     }
 
     @RequestMapping(value = "{/id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateGiftCertificate(@PathVariable long id,
+    public GiftCertificateDto updateGiftCertificate(@PathVariable long id,
                                       @Valid GiftCertificateDto giftCertificateDto){
         giftCertificateDto.setId(id);
         giftCertificateService.updateGiftCertificate(giftCertificateDto);
+        return giftCertificateDto;
     }
 
     /*@ExceptionHandler(GiftCertificateNotFoundException.class)
