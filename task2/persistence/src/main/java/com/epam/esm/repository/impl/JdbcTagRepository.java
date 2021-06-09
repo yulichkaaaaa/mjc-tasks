@@ -29,6 +29,10 @@ public class JdbcTagRepository implements TagRepository {
             "FROM tag JOIN tag_m2m_gift_certificate " +
             "ON tag.id = tag_m2m_gift_certificate.tag_id " +
             "WHERE tag_m2m_gift_certificate.gift_certificate_id = ?";
+    private static final String SQL_DELETE_TAG_AND_GIFT_CERTIFICATE_CONNECTION = "DELETE " +
+            "FROM tag_m2m_gift_certificate " +
+            "WHERE tag_id = ? AND gift_certificate_id = ?";
+
 
     /**
      * Setter method of the {@code JdbcTemplate} object.
@@ -65,12 +69,22 @@ public class JdbcTagRepository implements TagRepository {
         return Optional.ofNullable(tag);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<Tag> findTagsByGiftCertificateId(long giftCertificateId) {
          List<Tag> tags = jdbcTemplate.query(SQL_SELECT_TAGS_BY_GIFT_CERTIFICATES_ID,
                 ps -> ps.setLong(1, giftCertificateId),
                 this::mapTag);
          return new HashSet<>(tags);
+    }
+
+    @Override
+    public void disconnectTag(long tagId, long giftCertificateId) {
+        jdbcTemplate.update(SQL_DELETE_TAG_AND_GIFT_CERTIFICATE_CONNECTION,
+                tagId,
+                giftCertificateId);
     }
 
     /**

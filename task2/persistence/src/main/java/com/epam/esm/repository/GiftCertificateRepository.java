@@ -48,4 +48,13 @@ public interface GiftCertificateRepository {
      */
     List<GiftCertificate> findGiftCertificateByTagName(String tagName);
 
+    /**
+     * Find gift certificates by it's name and description.
+     * If only one of parameters passed, find by this parameter.
+     *
+     * @param name part of name of gift certificate
+     * @param description part of description of gift certificate
+     * @return list of gift certificates
+     */
+    List<GiftCertificate> findGiftCertificatesByNameAndDescription(String name, String description);
 }

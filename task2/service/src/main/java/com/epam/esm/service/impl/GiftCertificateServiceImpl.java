@@ -13,6 +13,7 @@ import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +64,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return giftCertificateDtoConverter.convertToDto(giftCertificate, tags);
     }
 
+    @Transactional
     @Override
     public void createGiftCertificate(GiftCertificateDto giftCertificateDto) {
         long giftCertificateId = giftCertificateDto.getId();
@@ -71,8 +73,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
         GiftCertificate giftCertificate = giftCertificateDtoConverter.convertToEntity(giftCertificateDto);
         giftCertificateRepository.createGiftCertificate(giftCertificate);
+        giftCertificateDto.getTags()
+                .stream()
+                .filter(tag -> tagRepository.findTagById(tag.getId()).isEmpty())
+                .forEach(tag -> tagRepository.createTag(tagDtoConverter.convertToEntity(tag)));
     }
 
+    @Transactional
     @Override
     public void updateGiftCertificate(GiftCertificateDto giftCertificateDto) {
         long giftCertificateId = giftCertificateDto.getId();
@@ -81,6 +88,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
         GiftCertificate giftCertificate = giftCertificateDtoConverter.convertToEntity(giftCertificateDto);
         giftCertificateRepository.createGiftCertificate(giftCertificate);
+        giftCertificateDto.getTags()
+                .stream()
+                .filter(tag -> tagRepository.findTagById(tag.getId()).isEmpty())
+                .forEach(tag -> tagRepository.createTag(tagDtoConverter.convertToEntity(tag)));
     }
 
     @Override
@@ -96,14 +107,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return giftCertificateRepository
                 .findGiftCertificateByTagName(tagDto.getName())
                 .stream()
-                .map(giftCertificate -> {
-                    Set<TagDto> tags = tagRepository
+                .map(giftCertificate ->
+                    giftCertificateDtoConverter.convertToDto(giftCertificate, tagRepository
                             .findTagsByGiftCertificateId(giftCertificate.getId())
                             .stream()
                             .map(tag -> tagDtoConverter.convertToDto(tag))
-                            .collect(Collectors.toSet());
-                    return giftCertificateDtoConverter.convertToDto(giftCertificate, tags);
-                })
+                            .collect(Collectors.toSet()))
+                )
                 .collect(Collectors.toList());
     }
 

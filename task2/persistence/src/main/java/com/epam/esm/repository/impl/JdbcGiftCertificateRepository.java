@@ -35,6 +35,11 @@ public class JdbcGiftCertificateRepository implements GiftCertificateRepository 
             "ON gift_certificate.id = tag_m2m_gift_certificate.gift_certificate_id " +
             "JOIN tag ON tag_m2m_gift_certificate.tag_id = tag.id" +
             "WHERE tag.name LIKE ?";
+    private static final String SQL_SELECT_GIFT_CERTIFICATES_BY_NAME_AND_DESCRIPTION = "SELECT id, name, " +
+            "description, price, duration, create_date, last_update_date  " +
+            "FROM gift_certificate " +
+            "WHERE name LIKE CONCAT('%', IFNULL(?, name), '%') " +
+            "AND description LIKE CONCAT('%', IFNULL(?, description), '%')";
 
     /**
      * Setter method of {@code JdbcTemplate} object.
@@ -101,6 +106,19 @@ public class JdbcGiftCertificateRepository implements GiftCertificateRepository 
     public List<GiftCertificate> findGiftCertificateByTagName(String tagName) {
         return jdbcTemplate.query(SQL_SELECT_GIFT_CERTIFICATES_BY_TAG_NAMES,
                 ps -> ps.setString(1, tagName),
+                this::mapGiftCertificate);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<GiftCertificate> findGiftCertificatesByNameAndDescription(String name, String description) {
+        return jdbcTemplate.query(SQL_SELECT_GIFT_CERTIFICATES_BY_NAME_AND_DESCRIPTION,
+                ps -> {
+                    ps.setString(1, name);
+                    ps.setString(2, description);
+                },
                 this::mapGiftCertificate);
     }
 
