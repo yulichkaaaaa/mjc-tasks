@@ -30,8 +30,7 @@ public class JdbcTagRepository implements TagRepository {
             "ON tag.id = tag_m2m_gift_certificate.tag_id " +
             "WHERE tag_m2m_gift_certificate.gift_certificate_id = ?";
     private static final String SQL_DELETE_TAG_AND_GIFT_CERTIFICATE_CONNECTION = "DELETE " +
-            "FROM tag_m2m_gift_certificate " +
-            "WHERE tag_id = ? AND gift_certificate_id = ?";
+            "FROM tag_m2m_gift_certificate WHERE gift_certificate_id = ?";
 
 
     /**
@@ -81,10 +80,8 @@ public class JdbcTagRepository implements TagRepository {
     }
 
     @Override
-    public void disconnectTag(long tagId, long giftCertificateId) {
-        jdbcTemplate.update(SQL_DELETE_TAG_AND_GIFT_CERTIFICATE_CONNECTION,
-                tagId,
-                giftCertificateId);
+    public void disconnectTagsFromGiftCertificate(long giftCertificateId) {
+        jdbcTemplate.update(SQL_DELETE_TAG_AND_GIFT_CERTIFICATE_CONNECTION, giftCertificateId);
     }
 
     /**

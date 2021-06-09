@@ -43,10 +43,9 @@ public interface TagRepository {
     Set<Tag> findTagsByGiftCertificateId(long giftCertificateId);
 
     /**
-     * Remove connection between tag and gift certificate.
+     * Remove connection between tags and gift certificate.
      *
-     * @param tagId id of the tag
      * @param giftCertificateId id of the gift certificate
      */
-    void disconnectTag(long tagId, long giftCertificateId);
+    void disconnectTagsFromGiftCertificate(long giftCertificateId);
 }

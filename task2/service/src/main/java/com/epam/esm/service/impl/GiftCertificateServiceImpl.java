@@ -94,12 +94,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .forEach(tag -> tagRepository.createTag(tagDtoConverter.convertToEntity(tag)));
     }
 
+    @Transactional
     @Override
     public void deleteGiftCertificateById(long giftCertificateId) {
         if(!giftCertificateExists(giftCertificateId)){
             throw new GiftCertificateNotExistException(giftCertificateId);
         }
         giftCertificateRepository.deleteGiftCertificate(giftCertificateId);
+        tagRepository.disconnectTagsFromGiftCertificate(giftCertificateId);
     }
 
     @Override
