@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+version 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':persistence')
+    implementation project(':service')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.10.1'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.1'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.10.1'
+}
+
+test {
+    useJUnitPlatform()
+}

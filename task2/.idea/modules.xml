@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/task2.iml" filepath="$PROJECT_DIR$/.idea/modules/task2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/persistence/task2.persistence.iml" filepath="$PROJECT_DIR$/.idea/modules/persistence/task2.persistence.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/persistence/task2.persistence.main.iml" filepath="$PROJECT_DIR$/.idea/modules/persistence/task2.persistence.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/persistence/task2.persistence.test.iml" filepath="$PROJECT_DIR$/.idea/modules/persistence/task2.persistence.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/service/task2.service.iml" filepath="$PROJECT_DIR$/.idea/modules/service/task2.service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/service/task2.service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/service/task2.service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/service/task2.service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/service/task2.service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/web/task2.web.iml" filepath="$PROJECT_DIR$/.idea/modules/web/task2.web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/web/task2.web.main.iml" filepath="$PROJECT_DIR$/.idea/modules/web/task2.web.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/web/task2.web.test.iml" filepath="$PROJECT_DIR$/.idea/modules/web/task2.web.test.iml" />
+    </modules>
+  </component>
+</project>
