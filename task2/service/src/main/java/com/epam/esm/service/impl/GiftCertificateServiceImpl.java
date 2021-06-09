@@ -5,9 +5,9 @@ import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.converters.GiftCertificateDtoConverter;
 import com.epam.esm.dto.converters.TagDtoConverter;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.exception.GiftCertificateAlreadyExistsException;
-import com.epam.esm.exception.GiftCertificateNotExistException;
-import com.epam.esm.exception.GiftCertificateNotFoundException;
+import com.epam.esm.exception.EntityAlreadyExistsException;
+import com.epam.esm.exception.EntityNotExistException;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.GiftCertificateService;
@@ -53,7 +53,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateRepository
                 .findGiftCertificateById(giftCertificateId);
         if(giftCertificateOptional.isEmpty()){
-            throw new GiftCertificateNotFoundException(giftCertificateId);
+            throw new EntityNotFoundException(giftCertificateId);
         }
         GiftCertificate giftCertificate = giftCertificateOptional.get();
         Set<TagDto> tags = tagRepository
@@ -69,7 +69,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public void createGiftCertificate(GiftCertificateDto giftCertificateDto) {
         long giftCertificateId = giftCertificateDto.getId();
         if(giftCertificateExists(giftCertificateId)){
-            throw new GiftCertificateAlreadyExistsException(giftCertificateId);
+            throw new EntityAlreadyExistsException(giftCertificateId);
         }
         GiftCertificate giftCertificate = giftCertificateDtoConverter.convertToEntity(giftCertificateDto);
         giftCertificateRepository.createGiftCertificate(giftCertificate);
@@ -84,7 +84,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public void updateGiftCertificate(GiftCertificateDto giftCertificateDto) {
         long giftCertificateId = giftCertificateDto.getId();
         if(!giftCertificateExists(giftCertificateId)){
-            throw new GiftCertificateNotExistException(giftCertificateId);
+            throw new EntityNotExistException(giftCertificateId);
         }
         GiftCertificate giftCertificate = giftCertificateDtoConverter.convertToEntity(giftCertificateDto);
         giftCertificateRepository.createGiftCertificate(giftCertificate);
@@ -98,7 +98,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public void deleteGiftCertificateById(long giftCertificateId) {
         if(!giftCertificateExists(giftCertificateId)){
-            throw new GiftCertificateNotExistException(giftCertificateId);
+            throw new EntityNotExistException(giftCertificateId);
         }
         giftCertificateRepository.deleteGiftCertificate(giftCertificateId);
         tagRepository.disconnectTagsFromGiftCertificate(giftCertificateId);

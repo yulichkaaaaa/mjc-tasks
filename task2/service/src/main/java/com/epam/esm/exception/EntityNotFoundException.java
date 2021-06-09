@@ -1,10 +1,10 @@
 package com.epam.esm.exception;
 
-public class GiftCertificateNotFoundException extends RuntimeException{
+public class EntityNotFoundException extends RuntimeException{
 
     private long id;
 
-    public GiftCertificateNotFoundException(long id){
+    public EntityNotFoundException(long id){
         this.id = id;
     }
 

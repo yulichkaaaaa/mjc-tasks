@@ -3,8 +3,8 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.converters.TagDtoConverter;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.GiftCertificateAlreadyExistsException;
-import com.epam.esm.exception.GiftCertificateNotExistException;
+import com.epam.esm.exception.EntityAlreadyExistsException;
+import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.repository.impl.JdbcTagRepository;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class TagServiceImpl implements TagService {
         long tagId = tagDto.getId();
         Optional<Tag> tagOptional = jdbcTagRepository.findTagById(tagId);
         if(tagOptional.isPresent()) {
-            throw new GiftCertificateAlreadyExistsException(tagId);
+            throw new EntityAlreadyExistsException(tagId);
         }
         Tag tag = tagDtoConverter.convertToEntity(tagDto);
         jdbcTagRepository.createTag(tag);
@@ -49,7 +49,7 @@ public class TagServiceImpl implements TagService {
     public void deleteTag(long tagId) {
         Optional<Tag> tagOptional = jdbcTagRepository.findTagById(tagId);
         if(tagOptional.isEmpty()) {
-            throw new GiftCertificateNotExistException(tagId);
+            throw new EntityNotExistException(tagId);
         }
         jdbcTagRepository.deleteTag(tagId);
     }

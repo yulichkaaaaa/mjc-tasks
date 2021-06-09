@@ -1,14 +1,15 @@
 package com.epam.esm.exception;
 
-public class GiftCertificateAlreadyExistsException extends RuntimeException{
+public class EntityNotExistException extends RuntimeException{
 
     private long id;
 
-    public GiftCertificateAlreadyExistsException(long id){
+    public EntityNotExistException(long id){
         this.id = id;
     }
 
     public long getId() {
         return id;
     }
+
 }
