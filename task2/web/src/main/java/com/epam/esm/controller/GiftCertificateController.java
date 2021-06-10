@@ -76,5 +76,5 @@ public class GiftCertificateController {
         giftCertificateService.updateGiftCertificate(giftCertificateDto);
         return giftCertificateDto;
     }
-    
+
 }

@@ -59,7 +59,7 @@ public class GiftCertificateValidator implements Validator {
     }
 
     private void validateDuration(int duration, Errors errors){
-        if(duration <= 0.0) {
+        if(duration <= 0) {
             errors.reject(NOT_POSITIVE_DURATION_ERROR);
         }
     }
