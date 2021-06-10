@@ -93,10 +93,10 @@ public class JdbcGiftCertificateRepository implements GiftCertificateRepository 
      */
     @Override
     public Optional<GiftCertificate> findGiftCertificateById(long giftCertificateId) {
-        GiftCertificate giftCertificate = jdbcTemplate.queryForObject(SQL_SELECT_GIFT_CERTIFICATE_BY_ID,
-                this::mapGiftCertificate,
-                giftCertificateId);
-        return Optional.ofNullable(giftCertificate);
+        List<GiftCertificate> giftCertificates = jdbcTemplate.query(SQL_SELECT_GIFT_CERTIFICATE_BY_ID,
+                rs -> rs.setLong(1, giftCertificateId),
+                this::mapGiftCertificate);
+        return giftCertificates.isEmpty() ? Optional.empty() : Optional.of(giftCertificates.get(0));
     }
 
     /**

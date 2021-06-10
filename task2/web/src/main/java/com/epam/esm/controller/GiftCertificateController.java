@@ -37,7 +37,6 @@ public class GiftCertificateController {
 
     @Autowired
     public void setLocaleService(LocaleService localeService) {
-
         this.localeService = localeService;
     }
 
@@ -56,7 +55,7 @@ public class GiftCertificateController {
         giftCertificateService.deleteGiftCertificateById(id);
     }
 
-    @RequestMapping(value = "{/id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateDto createGiftCertificate(@PathVariable long id,
                                       @Valid GiftCertificateDto giftCertificateDto,
@@ -77,11 +76,5 @@ public class GiftCertificateController {
         giftCertificateService.updateGiftCertificate(giftCertificateDto);
         return giftCertificateDto;
     }
-
-    /*@ExceptionHandler(GiftCertificateNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Error spittleNotFound(SpittleNotFoundException e) {
-        long spittleId = e.getSpittleId();
-        return new Error(4, "Spittle [" + spittleId + "] not found");
-    }*/
+    
 }

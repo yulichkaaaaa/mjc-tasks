@@ -5,6 +5,7 @@ import com.epam.esm.dto.converters.TagDtoConverter;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotExistException;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.impl.JdbcTagRepository;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class TagServiceImpl implements TagService {
     public TagDto findTagById(long tagId) {
         Optional<Tag> tagOptional = jdbcTagRepository.findTagById(tagId);
         if(tagOptional.isEmpty()) {
-            throw new RuntimeException();
+            throw new EntityNotFoundException(tagId);
         }
         return tagDtoConverter.convertToDto(tagOptional.get());
     }

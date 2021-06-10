@@ -64,8 +64,10 @@ public class JdbcTagRepository implements TagRepository {
      */
     @Override
     public Optional<Tag> findTagById(long tagId) {
-        Tag tag = jdbcTemplate.queryForObject(SQL_SELECT_TAG_BY_ID, this::mapTag, tagId);
-        return Optional.ofNullable(tag);
+        List<Tag> tags = jdbcTemplate.query(SQL_SELECT_TAG_BY_ID,
+                rs -> rs.setLong(1, tagId),
+                this::mapTag);
+        return tags.isEmpty() ? Optional.empty() : Optional.of(tags.get(0));
     }
 
     /**
@@ -92,7 +94,7 @@ public class JdbcTagRepository implements TagRepository {
      * @return the {@code Tag} object
      * @throws SQLException if attempt to get incompatible data from result set
      */
-    private Tag mapTag(ResultSet rs, int row) throws SQLException {
+    private Tag mapTag(ResultSet rs, int row) throws SQLException{
         long id = rs.getLong("id");
         String name = rs.getString("name");
         return new Tag(id, name);
