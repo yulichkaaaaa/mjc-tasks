@@ -40,6 +40,9 @@ public class JdbcGiftCertificateRepository implements GiftCertificateRepository 
             "FROM gift_certificate " +
             "WHERE name LIKE CONCAT('%', IFNULL(?, name), '%') " +
             "AND description LIKE CONCAT('%', IFNULL(?, description), '%')";
+    private static final String SQL_SELECT_ALL_GIFT_CERTIFICATES = "SELECT id, name, " +
+            "description, price, duration, create_date, last_update_date  " +
+            "FROM gift_certificate";
 
     /**
      * Setter method of {@code JdbcTemplate} object.
@@ -122,6 +125,22 @@ public class JdbcGiftCertificateRepository implements GiftCertificateRepository 
                 this::mapGiftCertificate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<GiftCertificate> findAllGiftCertificates() {
+        return jdbcTemplate.query(SQL_SELECT_ALL_GIFT_CERTIFICATES, this::mapGiftCertificate);
+    }
+
+    /**
+     * Maps result set content on the {@code GiftCertificate} object.
+     *
+     * @param rs the {@code ResultSet} object
+     * @param row number of the row in table
+     * @return the {@code GiftCertificate} object
+     * @throws SQLException if attempt to get incompatible data from result set
+     */
     private GiftCertificate mapGiftCertificate(ResultSet rs, int row) throws SQLException {
         long id = rs.getLong("id");
         String name = rs.getString("name");

@@ -12,26 +12,47 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Web configuration class.
+ *
+ * @author Yulia Shuleiko
+ */
 @Configuration
 @ComponentScan(basePackages = "com.epam.esm")
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
+    private static final String ERRORS_RESOURCE_BUNDLE = "classpath:errors";
+    private static final String ENCODING = "UTF-8";
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(new MappingJackson2HttpMessageConverter(jackson2ObjectMapperBuilder().build()));
     }
 
+    /**
+     * Create the {@code Jackson2ObjectMapperBuilder} object as a bean
+     *
+     * @return the {@code Jackson2ObjectMapperBuilder} object
+     */
     @Bean
     public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
         return new Jackson2ObjectMapperBuilder();
     }
 
+    /**
+     * Create the {@code ReloadableResourceBundleMessageSource} object as a bean
+     *
+     * @return the {@code ReloadableResourceBundleMessageSource} object
+     */
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
-        source.setBasename("classpath:errors");
-        source.setDefaultEncoding("UTF-8");
+        source.setBasename(ERRORS_RESOURCE_BUNDLE);
+        source.setDefaultEncoding(ENCODING);
         return source;
     }
 }

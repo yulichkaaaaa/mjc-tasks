@@ -57,4 +57,11 @@ public interface GiftCertificateRepository {
      * @return list of gift certificates
      */
     List<GiftCertificate> findGiftCertificatesByNameAndDescription(String name, String description);
+
+    /**
+     * Find all gift certificates.
+     *
+     * @return list of gift certificates.
+     */
+    List<GiftCertificate> findAllGiftCertificates();
 }

@@ -8,6 +8,11 @@ import org.springframework.validation.Validator;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Gift certificate's validator.
+ *
+ * @author Shuleiko Yulia
+ */
 @Service
 public class GiftCertificateValidator implements Validator {
 
@@ -21,11 +26,17 @@ public class GiftCertificateValidator implements Validator {
     private static final String NOT_POSITIVE_DURATION_ERROR = "duration_not_positive";
     private static final String FUTURE_CREATE_DATE_ERROR = "create_date_in_future";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean supports(Class<?> clazz) {
         return GiftCertificateDto.class.equals(clazz);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validate(Object target, Errors errors) {
         GiftCertificateDto giftCertificate = (GiftCertificateDto) target;

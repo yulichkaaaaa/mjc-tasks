@@ -81,13 +81,16 @@ public class JdbcTagRepository implements TagRepository {
          return new HashSet<>(tags);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void disconnectTagsFromGiftCertificate(long giftCertificateId) {
         jdbcTemplate.update(SQL_DELETE_TAG_AND_GIFT_CERTIFICATE_CONNECTION, giftCertificateId);
     }
 
     /**
-     *
+     * Maps result set content on the {@code Tag} object.
      *
      * @param rs the {@code ResultSet} object
      * @param row number of the row in table

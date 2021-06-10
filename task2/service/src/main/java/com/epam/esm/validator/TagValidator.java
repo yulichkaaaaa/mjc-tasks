@@ -5,6 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/**
+ * Tag's validator.
+ *
+ * @author Shuleiko Yulia
+ */
 @Service
 public class TagValidator implements Validator {
 
@@ -12,11 +17,17 @@ public class TagValidator implements Validator {
     private static final String EMPTY_NAME_ERROR = "name_empty";
     private static final String TOO_LONG_NAME_ERROR = "name_too_long";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean supports(Class<?> clazz) {
         return TagDto.class.equals(clazz);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validate(Object target, Errors errors) {
         TagDto tag = (TagDto) target;

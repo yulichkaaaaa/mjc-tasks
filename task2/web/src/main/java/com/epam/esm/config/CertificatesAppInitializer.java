@@ -8,6 +8,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 import java.util.ResourceBundle;
 
+/**
+ * Web application initialization class.
+ *
+ * @author Shuleiko Yulia
+ */
 public class CertificatesAppInitializer implements WebApplicationInitializer {
 
     private static final String PROFILE_ACTIVE = "spring.profiles.active";
@@ -15,6 +20,9 @@ public class CertificatesAppInitializer implements WebApplicationInitializer {
     private static final String APPLICATION_BUNDLE_NAME = "app";
     private static final String MAPPING = "/";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onStartup(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext applicationContext
@@ -26,6 +34,11 @@ public class CertificatesAppInitializer implements WebApplicationInitializer {
         setActiveProfile(servletContext);
     }
 
+    /**
+     * Sets current active profile.
+     *
+     * @param servletContext the {@code ServletContext} object
+     */
     private void setActiveProfile(ServletContext servletContext){
         ResourceBundle resource = ResourceBundle.getBundle(APPLICATION_BUNDLE_NAME);
         servletContext.setInitParameter(PROFILE_ACTIVE, resource.getString(PROFILE_ACTIVE));

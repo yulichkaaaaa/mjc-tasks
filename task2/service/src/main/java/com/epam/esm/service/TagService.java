@@ -3,7 +3,7 @@ package com.epam.esm.service;
 import com.epam.esm.dto.TagDto;
 
 /**
- * Interface provides operations with {@code tagDto} object.
+ * Interface provides operations with {@code TagDto} object.
  *
  * @author Shuleiko Yulia
  */
