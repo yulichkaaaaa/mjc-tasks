@@ -3,3 +3,9 @@
 
 # Ignore Gradle build output directory
 build
+
+/.idea
+/lib
+gradlew
+gradlew.bat
+.gitattribures
