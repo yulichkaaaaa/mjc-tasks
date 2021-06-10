@@ -74,8 +74,8 @@ public class DataSourceConfig {
     /**
      * Create the {@code JdbcTemplate} object as a bean
      *
-     * @param dataSource the {@code DataSource object}
-     * @return the {@code JdbcTemplate object}
+     * @param dataSource the {@code DataSource} object
+     * @return the {@code JdbcTemplate} object
      */
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
@@ -85,8 +85,8 @@ public class DataSourceConfig {
     /**
      * Create the {@code TransactionManager} object as a bean
      *
-     * @param dataSource the {@code DataSource object}
-     * @return the {@code TransactionManager object}
+     * @param dataSource the {@code DataSource} object
+     * @return the {@code TransactionManager} object
      */
     @Bean
     public TransactionManager transactionManager(DataSource dataSource) {
