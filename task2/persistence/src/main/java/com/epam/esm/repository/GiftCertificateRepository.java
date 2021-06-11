@@ -17,7 +17,7 @@ public interface GiftCertificateRepository {
      *
      * @param giftCertificate the {@code GiftCertificate} object
      */
-    void createGiftCertificate(GiftCertificate giftCertificate);
+    long createGiftCertificate(GiftCertificate giftCertificate);
 
     /**
      * Update gift certificate's properties.

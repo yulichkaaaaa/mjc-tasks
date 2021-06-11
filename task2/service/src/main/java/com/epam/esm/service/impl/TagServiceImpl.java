@@ -7,7 +7,6 @@ import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.impl.JdbcTagRepository;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,10 +49,10 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public void createTag(TagDto tagDto) {
-        long tagId = tagDto.getId();
-        Optional<Tag> tagOptional = tagRepository.findTagById(tagId);
+        String name = tagDto.getName();
+        Optional<Tag> tagOptional = tagRepository.findTagByName(name);
         if(tagOptional.isPresent()) {
-            throw new EntityAlreadyExistsException(tagId);
+            throw new EntityAlreadyExistsException(tagOptional.get().getId());
         }
         Tag tag = tagDtoConverter.convertToEntity(tagDto);
         tagRepository.createTag(tag);

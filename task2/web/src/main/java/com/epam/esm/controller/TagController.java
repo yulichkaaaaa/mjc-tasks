@@ -15,13 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -35,8 +29,8 @@ import javax.validation.Valid;
 public class TagController {
 
     private static final String ENTITY_NOT_FOUND_ERROR = "entity_not_found";
-    private static final String ENTITY_NOT_EXIST_ERROR = "entity_already_exists";
-    private static final String ENTITY_ALREADY_EXISTS_ERROR = "entity_not_exist";
+    private static final String ENTITY_NOT_EXIST_ERROR = "entity_not_exist";
+    private static final String ENTITY_ALREADY_EXISTS_ERROR = "entity_already_exists";
     private TagService tagService;
     private TagValidator tagValidator;
     private LocaleService localeService;
@@ -111,7 +105,7 @@ public class TagController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
-    public void createTag(@Valid TagDto tagDto, BindingResult bindingResult){
+    public void createTag(@RequestBody @Valid TagDto tagDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new NotValidFieldsException(bindingResult);
         }
@@ -169,12 +163,12 @@ public class TagController {
         BindingResult bindingResult = ex.getBindingResult();
         StringBuilder errorMessage = new StringBuilder();
         for (Object object : bindingResult.getAllErrors()) {
-            if(object instanceof FieldError) {
+            if(object instanceof FieldError){
                 FieldError fieldError = (FieldError) object;
-                errorMessage.append(localeService.getLocaleMessage(fieldError.toString()));
+                errorMessage.append(localeService.getLocaleMessage(fieldError.getCode()));
             }
         }
-        return new Error(CustomErrorCode.TAG_ALREADY_EXISTS.code, errorMessage.toString());
+        return new Error(CustomErrorCode.TAG_FIELDS_NOT_VALID.code, errorMessage.toString());
     }
 }
 

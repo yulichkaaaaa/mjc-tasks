@@ -14,6 +14,7 @@ import org.springframework.validation.Validator;
 public class TagValidator implements Validator {
 
     private static final int NAME_MAX_LENGTH = 40;
+    private static final String FIELD_NAME = "name";
     private static final String EMPTY_NAME_ERROR = "name_empty";
     private static final String TOO_LONG_NAME_ERROR = "name_too_long";
 
@@ -36,9 +37,9 @@ public class TagValidator implements Validator {
 
     private void validateName(String name, Errors errors){
         if(name.isEmpty()) {
-            errors.reject(EMPTY_NAME_ERROR);
+            errors.rejectValue(FIELD_NAME, EMPTY_NAME_ERROR);
         } else if (name.length() > NAME_MAX_LENGTH) {
-            errors.reject(TOO_LONG_NAME_ERROR);
+            errors.rejectValue(FIELD_NAME, TOO_LONG_NAME_ERROR);
         }
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.validation.Validator;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Gift certificate's validator.
@@ -18,6 +19,11 @@ public class GiftCertificateValidator implements Validator {
 
     private static final int NAME_MAX_LENGTH = 40;
     private static final int DESCRIPTION_MAX_LENGTH = 200;
+    private static final String FIELD_NAME = "name";
+    private static final String FIELD_DURATION = "duration";
+    private static final String FIELD_DESCRIPTION = "description";
+    private static final String FIELD_PRICE = "price";
+    private static final String FIELD_CREATE_DATE = "create_date";
     private static final String EMPTY_NAME_ERROR = "name_empty";
     private static final String TOO_LONG_NAME_ERROR = "name_too_long";
     private static final String EMPTY_DESCRIPTION_ERROR = "description_empty";
@@ -49,35 +55,35 @@ public class GiftCertificateValidator implements Validator {
 
     private void validateName(String name, Errors errors){
         if(name.isEmpty()) {
-            errors.reject(EMPTY_NAME_ERROR);
+            errors.rejectValue(FIELD_NAME, EMPTY_NAME_ERROR);
         } else if (name.length() > NAME_MAX_LENGTH) {
-            errors.reject(TOO_LONG_NAME_ERROR);
+            errors.rejectValue(FIELD_NAME, TOO_LONG_NAME_ERROR);
         }
     }
 
     private void validateDescription(String description, Errors errors){
         if(description.isEmpty()) {
-            errors.reject(EMPTY_DESCRIPTION_ERROR);
+            errors.rejectValue(FIELD_DESCRIPTION, EMPTY_DESCRIPTION_ERROR);
         } else if (description.length() > DESCRIPTION_MAX_LENGTH) {
-            errors.reject(TOO_LONG_DESCRIPTION_ERROR);
+            errors.rejectValue(FIELD_DESCRIPTION, TOO_LONG_DESCRIPTION_ERROR);
         }
     }
 
     private void validatePrice(BigDecimal price, Errors errors){
         if(price.doubleValue() <= 0.0) {
-            errors.reject(NOT_POSITIVE_PRICE_ERROR);
+            errors.rejectValue(FIELD_PRICE, NOT_POSITIVE_PRICE_ERROR);
         }
     }
 
     private void validateDuration(int duration, Errors errors){
         if(duration <= 0) {
-            errors.reject(NOT_POSITIVE_DURATION_ERROR);
+            errors.rejectValue(FIELD_DURATION, NOT_POSITIVE_DURATION_ERROR);
         }
     }
 
     private void validateCreateDate(LocalDateTime createDate, Errors errors){
-        if(createDate.isAfter(LocalDateTime.now())) {
-            errors.reject(FUTURE_CREATE_DATE_ERROR);
+        if(Objects.nonNull(createDate) && createDate.isAfter(LocalDateTime.now())) {
+            errors.rejectValue(FIELD_CREATE_DATE, FUTURE_CREATE_DATE_ERROR);
         }
     }
 }

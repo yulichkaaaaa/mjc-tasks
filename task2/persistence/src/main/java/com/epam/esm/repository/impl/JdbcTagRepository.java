@@ -25,13 +25,19 @@ public class JdbcTagRepository implements TagRepository {
     private static final String SQL_INSERT_TAG = "INSERT INTO tag (name) VALUES (?)";
     private static final String SQL_DELETE_TAG = "DELETE FROM tag WHERE id = ?";
     private static final String SQL_SELECT_TAG_BY_ID = "SELECT id, name FROM tag WHERE id = ?";
-    private static final String SQL_SELECT_TAGS_BY_GIFT_CERTIFICATES_ID = "SELECT tag.id, tag.name " +
+    private static final String SQL_SELECT_TAG_BY_NAME = "SELECT id, name FROM tag WHERE name = ?";
+    private static final String SQL_SELECT_TAGS_BY_GIFT_CERTIFICATE_ID = "SELECT tag.id, tag.name " +
             "FROM tag JOIN tag_m2m_gift_certificate " +
             "ON tag.id = tag_m2m_gift_certificate.tag_id " +
             "WHERE tag_m2m_gift_certificate.gift_certificate_id = ?";
     private static final String SQL_DELETE_TAG_AND_GIFT_CERTIFICATE_CONNECTION = "DELETE " +
             "FROM tag_m2m_gift_certificate WHERE gift_certificate_id = ?";
-
+    private static final String SQL_INSERT_TAG_AND_GIFT_CERTIFICATE_CONNECTION = "INSERT " +
+            "INTO tag_m2m_gift_certificate (gift_certificate_id, tag_id) VALUES (?, ?)";
+    private static final String SQL_SELECT_TAGS_BY_GIFT_CERTIFICATE_ID_AND_TAG_ID = "SELECT tag.id, tag.name " +
+            "FROM tag JOIN tag_m2m_gift_certificate " +
+            "ON tag.id = tag_m2m_gift_certificate.tag_id " +
+            "WHERE tag_m2m_gift_certificate.gift_certificate_id = ? AND tag_m2m_gift_certificate.tag_id = ?";
 
     /**
      * Setter method of the {@code JdbcTemplate} object.
@@ -75,7 +81,7 @@ public class JdbcTagRepository implements TagRepository {
      */
     @Override
     public Set<Tag> findTagsByGiftCertificateId(long giftCertificateId) {
-         List<Tag> tags = jdbcTemplate.query(SQL_SELECT_TAGS_BY_GIFT_CERTIFICATES_ID,
+         List<Tag> tags = jdbcTemplate.query(SQL_SELECT_TAGS_BY_GIFT_CERTIFICATE_ID,
                 ps -> ps.setLong(1, giftCertificateId),
                 this::mapTag);
          return new HashSet<>(tags);
@@ -87,6 +93,38 @@ public class JdbcTagRepository implements TagRepository {
     @Override
     public void disconnectTagsFromGiftCertificate(long giftCertificateId) {
         jdbcTemplate.update(SQL_DELETE_TAG_AND_GIFT_CERTIFICATE_CONNECTION, giftCertificateId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<Tag> findTagByName(String name) {
+        List<Tag> tags = jdbcTemplate.query(SQL_SELECT_TAG_BY_NAME,
+                rs -> rs.setString(1, name),
+                this::mapTag);
+        return tags.isEmpty() ? Optional.empty() : Optional.of(tags.get(0));
+    }
+
+    @Override
+    public boolean connectionExists(long giftCertificateId, long tagId) {
+        List<Tag> tags = jdbcTemplate.query(SQL_SELECT_TAGS_BY_GIFT_CERTIFICATE_ID_AND_TAG_ID,
+                ps -> {
+                    ps.setLong(1, giftCertificateId);
+                    ps.setLong(2, tagId);
+                },
+                this::mapTag);
+        return !tags.isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void connectTagsToGiftCertificate(long giftCertificateId, long tagId) {
+        jdbcTemplate.update(SQL_INSERT_TAG_AND_GIFT_CERTIFICATE_CONNECTION,
+                giftCertificateId,
+                tagId);
     }
 
     /**

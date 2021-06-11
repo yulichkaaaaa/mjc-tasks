@@ -20,6 +20,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.10.1'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.1'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.10.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.3'
 }
 
 test {

@@ -2,6 +2,7 @@ package com.epam.esm.config;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +41,9 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Bean
     public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
-        return new Jackson2ObjectMapperBuilder();
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return builder;
     }
 
     /**
