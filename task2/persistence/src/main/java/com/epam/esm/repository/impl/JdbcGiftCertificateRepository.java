@@ -18,6 +18,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Implementation of the {@code GiftCertificateRepository} that uses JDBC.
+ *
+ * @author Shuleiko Yulia
+ */
 @Repository
 public class JdbcGiftCertificateRepository implements GiftCertificateRepository {
 
