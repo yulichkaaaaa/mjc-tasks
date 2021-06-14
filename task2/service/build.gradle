@@ -2,19 +2,15 @@ plugins {
     id 'java'
 }
 
-version 'unspecified'
+version '1.0'
 
 repositories {
     mavenCentral()
-    maven { url "file://D:/tasks/"}
 }
 
 dependencies {
     implementation project(':persistence')
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-    implementation 'org.springframework:spring-tx:5.3.5'
+    implementation "org.springframework:spring-tx:${springTxVersion}"
 }
 
 test {

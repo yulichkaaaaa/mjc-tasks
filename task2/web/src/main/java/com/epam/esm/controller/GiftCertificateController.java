@@ -17,7 +17,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -135,11 +143,13 @@ public class GiftCertificateController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateGiftCertificate(@RequestBody @Valid GiftCertificateDto giftCertificateDto,
+    public void updateGiftCertificate(@PathVariable long id,
+                                      @RequestBody @Valid GiftCertificateDto giftCertificateDto,
                                       BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             throw new NotValidFieldsException(bindingResult);
         }
+        giftCertificateDto.setId(id);
         giftCertificateService.updateGiftCertificate(giftCertificateDto);
     }
 

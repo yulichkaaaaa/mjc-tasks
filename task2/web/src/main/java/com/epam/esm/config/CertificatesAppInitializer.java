@@ -28,8 +28,8 @@ public class CertificatesAppInitializer implements WebApplicationInitializer {
         AnnotationConfigWebApplicationContext applicationContext
                 = new AnnotationConfigWebApplicationContext();
         applicationContext.scan("com.epam.esm");
-        ServletRegistration.Dynamic registration = servletContext.addServlet(DISPATCHER_SERVLET_NAME,
-                new DispatcherServlet(applicationContext));
+        ServletRegistration.Dynamic registration = servletContext
+                .addServlet(DISPATCHER_SERVLET_NAME, new DispatcherServlet(applicationContext));
         registration.addMapping(MAPPING);
         setActiveProfile(servletContext);
     }
