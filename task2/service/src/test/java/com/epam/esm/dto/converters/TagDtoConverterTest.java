@@ -11,27 +11,29 @@ import org.junit.jupiter.api.TestInstance;
 public class TagDtoConverterTest {
 
     private TagDtoConverter tagDtoConverter;
+    private Tag tag;
+    private TagDto tagDto;
 
     @BeforeAll
     public void init(){
         tagDtoConverter = new TagDtoConverter();
+        initTagData();
+    }
+
+    private void initTagData(){
+        long id = 12;
+        String name = "birthday";
+        tag = new Tag(id, name);
+        tagDto = new TagDto(id, name);
     }
 
     @Test
     public void convertToDtoTest(){
-        long id = 12;
-        String name = "birthday";
-        Tag tag = new Tag(id, name);
-        TagDto tagDto = new TagDto(id, name);
         Assertions.assertEquals(tagDto, tagDtoConverter.convertToDto(tag));
     }
 
     @Test
     public void convertToEntityTest(){
-        long id = 12;
-        String name = "birthday";
-        Tag tag = new Tag(id, name);
-        TagDto tagDto = new TagDto(id, name);
         Assertions.assertEquals(tag, tagDtoConverter.convertToEntity(tagDto));
     }
 

@@ -20,11 +20,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Rest controller that processes requests with the gift certificate.
@@ -134,27 +130,16 @@ public class GiftCertificateController {
     /**
      * Update gift certificate.
      *
-     * @param id id of the gift certificate
+     * @param giftCertificateDto the {@code GiftCertificateDto} object
+     * @param bindingResult the {@code BindingResult} object
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateGiftCertificate(@PathVariable long id,
-                                      @RequestParam(required = false) String name,
-                                      @RequestParam(required = false) String description,
-                                      @RequestParam(required = false) BigDecimal price,
-                                      @RequestParam(required = false) int duration,
-                                      @RequestParam(required = false) String tagNames){
-        GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
-        giftCertificateDto.setName(name);
-        giftCertificateDto.setDescription(description);
-        giftCertificateDto.setPrice(price);
-        giftCertificateDto.setDuration(duration);
-        giftCertificateDto.setId(id);
-        Set<TagDto> tags = Arrays
-                .stream(tagNames.split(","))
-                .map(TagDto::new)
-                .collect(Collectors.toSet());
-        giftCertificateDto.addTags(tags);
+    public void updateGiftCertificate(@RequestBody @Valid GiftCertificateDto giftCertificateDto,
+                                      BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            throw new NotValidFieldsException(bindingResult);
+        }
         giftCertificateService.updateGiftCertificate(giftCertificateDto);
     }
 

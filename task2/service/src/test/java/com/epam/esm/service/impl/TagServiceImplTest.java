@@ -41,7 +41,7 @@ public class TagServiceImplTest {
         long id = 1;
         String name = "nature";
         Tag tag = new Tag(id, name);
-        Mockito.when(tagRepository.findTagById(id)).thenReturn(Optional.empty());
+        Mockito.when(tagRepository.findTagByName(name)).thenReturn(Optional.empty());
         tagService.createTag(tagDtoConverter.convertToDto(tag));
         Mockito.verify(tagRepository, Mockito.times(1)).createTag(tag);
     }
@@ -51,7 +51,7 @@ public class TagServiceImplTest {
         long id = 1;
         String name = "nature";
         Tag tag = new Tag(id, name);
-        Mockito.when(tagRepository.findTagById(id)).thenReturn(Optional.of(tag));
+        Mockito.when(tagRepository.findTagByName(name)).thenReturn(Optional.of(tag));
         Assertions.assertThrows(EntityAlreadyExistsException.class,
                 () -> tagService.createTag(tagDtoConverter.convertToDto(tag)));
     }

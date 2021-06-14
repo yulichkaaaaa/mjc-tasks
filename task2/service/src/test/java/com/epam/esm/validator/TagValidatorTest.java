@@ -24,28 +24,25 @@ public class TagValidatorTest {
     @Test
     public void validateTagTest(){
         TagDto tagDto = new TagDto("birthday");
-        String errorEmptyName = "name_empty";
-        String errorTooLongName = "name_too_long";
         tagValidator.validate(tagDto, errors);
-        Mockito.verify(errors, Mockito.times(0)).reject(errorEmptyName);
-        Mockito.verify(errors, Mockito.times(0)).reject(errorTooLongName);
+        Mockito.verify(errors, Mockito.times(0)).reject(Mockito.anyString());
     }
 
     @Test
-    public void validateTagNameEmptyTest(){
+    public void validateNameEmptyTest(){
         TagDto tagDto = new TagDto("");
-        String errorName = "name_empty";
         tagValidator.validate(tagDto, errors);
-        Mockito.verify(errors, Mockito.times(1)).reject(errorName);
+        Mockito.verify(errors, Mockito.times(1))
+                .rejectValue("name", "name_empty");
     }
 
     @Test
-    public void validateTagNameTooLongTest(){
+    public void validateNameTooLongTest(){
         TagDto tagDto = new TagDto("birthdayjsdkljjjjjjjjjjjjjjjjjjjj" +
                 "jjjjjjjjjjjjjjjjjjjjjjjjjzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" +
                 "zzzzzzzzzzzzzzzzzzzzzzzzzz");
-        String errorName = "name_too_long";
         tagValidator.validate(tagDto, errors);
-        Mockito.verify(errors, Mockito.times(1)).reject(errorName);
+        Mockito.verify(errors, Mockito.times(1))
+                .rejectValue("name", "name_too_long");
     }
 }
