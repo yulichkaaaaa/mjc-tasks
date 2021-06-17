@@ -9,9 +9,7 @@ import org.junit.jupiter.api.TestInstance;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SortServiceTest {
@@ -50,7 +48,7 @@ public class SortServiceTest {
     @Test
     public void sortGiftCertificateByNameAscTest(){
         List<GiftCertificateDto> result = sortService
-                .sortGiftCertificates(giftCertificates, "name", "asc");
+                .sortGiftCertificates(giftCertificates, Collections.singletonList("name"), "asc");
         Assertions.assertEquals(2, result.get(0).getId());
         Assertions.assertEquals(4, result.get(1).getId());
         Assertions.assertEquals(3, result.get(2).getId());
@@ -59,7 +57,7 @@ public class SortServiceTest {
     @Test
     public void sortGiftCertificateByNameDescTest(){
         List<GiftCertificateDto> result = sortService
-                .sortGiftCertificates(giftCertificates, "name", "desc");
+                .sortGiftCertificates(giftCertificates, Collections.singletonList("name"), "desc");
         Assertions.assertEquals(3, result.get(0).getId());
         Assertions.assertEquals(4, result.get(1).getId());
         Assertions.assertEquals(2, result.get(2).getId());
@@ -68,7 +66,7 @@ public class SortServiceTest {
     @Test
     public void sortGiftCertificateByDateAscTest(){
         List<GiftCertificateDto> result = sortService
-                .sortGiftCertificates(giftCertificates, "create_date", "asc");
+                .sortGiftCertificates(giftCertificates, Collections.singletonList("create_date"), "asc");
         Assertions.assertEquals(4, result.get(0).getId());
         Assertions.assertEquals(2, result.get(1).getId());
         Assertions.assertEquals(3, result.get(2).getId());
@@ -77,7 +75,7 @@ public class SortServiceTest {
     @Test
     public void sortGiftCertificateByDateDescTest(){
         List<GiftCertificateDto> result = sortService
-                .sortGiftCertificates(giftCertificates, "create_date", "desc");
+                .sortGiftCertificates(giftCertificates, Collections.singletonList("create_date"), "desc");
         Assertions.assertEquals(3, result.get(0).getId());
         Assertions.assertEquals(2, result.get(1).getId());
         Assertions.assertEquals(4, result.get(2).getId());

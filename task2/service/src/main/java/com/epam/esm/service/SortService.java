@@ -4,6 +4,7 @@ import com.epam.esm.dto.GiftCertificateDto;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Provides sorting operations.
@@ -38,18 +39,27 @@ public class SortService {
      * Sort list of gift certificates.
      *
      * @param giftCertificates list of gift certificates
-     * @param criteria criteria of sorting (name, date)
+     * @param criteriaList list of criteria of sorting (name, date)
      * @param direction direction of sorting (asc or desc)
      * @return list of gift certificates
      */
     public List<GiftCertificateDto> sortGiftCertificates(List<GiftCertificateDto> giftCertificates,
-                                         String criteria,
+                                         List<String> criteriaList,
                                          String direction) {
-        if (Objects.nonNull(criteria) && comparatorMap.containsKey(criteria)) {
-            giftCertificates.sort(comparatorMap.get(criteria));
-            if (direction.equals(DIRECTION_DESC)) {
-                Collections.reverse(giftCertificates);
+        List<Comparator> comparators = criteriaList
+                .stream()
+                .filter(criteria -> comparatorMap.containsKey(criteria))
+                .map(criteria -> comparatorMap.get(criteria))
+                .collect(Collectors.toList());
+        if(!comparators.isEmpty()) {
+            Comparator<GiftCertificateDto> comparator = comparators.remove(0);
+            for (Comparator nextComparator : comparators){
+                comparator = comparator.thenComparing(nextComparator);
             }
+            if (direction.equals(DIRECTION_DESC)) {
+                comparator = comparator.reversed();
+            }
+            giftCertificates.sort(comparator);
         }
         return giftCertificates;
     }

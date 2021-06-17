@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Rest controller that processes requests with the gift certificate.
@@ -173,7 +175,10 @@ public class GiftCertificateController {
         giftCertificate.addTag(new TagDto(tagName));
         List<GiftCertificateDto> giftCertificates = giftCertificateService
                 .findGiftCertificatesByCriteria(giftCertificate);
-        return sortService.sortGiftCertificates(giftCertificates, sortCriteria, sortDirection);
+        List<String> sortCriteriaList = Arrays
+                .stream(sortCriteria.split(","))
+                .collect(Collectors.toList());
+        return sortService.sortGiftCertificates(giftCertificates, sortCriteriaList, sortDirection);
     }
 
     /**
