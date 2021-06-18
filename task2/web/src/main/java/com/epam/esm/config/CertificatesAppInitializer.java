@@ -40,7 +40,7 @@ public class CertificatesAppInitializer implements WebApplicationInitializer {
      * @param servletContext the {@code ServletContext} object
      */
     private void setActiveProfile(ServletContext servletContext){
-        //ResourceBundle resource = ResourceBundle.getBundle(APPLICATION_BUNDLE_NAME);
-        servletContext.setInitParameter(PROFILE_ACTIVE, "production");
+        ResourceBundle resource = ResourceBundle.getBundle(APPLICATION_BUNDLE_NAME);
+        servletContext.setInitParameter(PROFILE_ACTIVE, resource.getString(PROFILE_ACTIVE));
     }
 }

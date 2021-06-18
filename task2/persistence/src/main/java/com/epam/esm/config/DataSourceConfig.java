@@ -9,6 +9,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.transaction.TransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.util.ResourceBundle;
@@ -19,6 +20,7 @@ import java.util.ResourceBundle;
  *
  * @author Shuleiko Yulia
  */
+@EnableTransactionManagement
 @Configuration
 public class DataSourceConfig {
 

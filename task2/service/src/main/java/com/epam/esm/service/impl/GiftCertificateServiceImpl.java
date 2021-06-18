@@ -159,9 +159,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                         .collect(Collectors.toList());
             }
         }
-        if (giftCertificates.isEmpty()) {
-            giftCertificates = findAllGiftCertificates();
-        }
         return giftCertificates;
     }
 

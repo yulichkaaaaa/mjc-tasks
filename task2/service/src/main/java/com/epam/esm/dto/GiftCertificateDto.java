@@ -18,7 +18,7 @@ public class GiftCertificateDto {
     private String name;
     private String description;
     private BigDecimal price;
-    private int duration;
+    private Integer duration;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
     private Set<TagDto> tags;
@@ -37,7 +37,7 @@ public class GiftCertificateDto {
      * @param tags set of tags of gift certificate
      */
     public GiftCertificateDto(long id, String name, String description,
-                              BigDecimal price, int duration, LocalDateTime createDate,
+                              BigDecimal price, Integer duration, LocalDateTime createDate,
                               LocalDateTime lastUpdateDate, Set<TagDto> tags) {
         this.id = id;
         this.name = name;
@@ -63,7 +63,7 @@ public class GiftCertificateDto {
      * @param tags set of tags of gift certificate
      */
     public GiftCertificateDto(String name, String description, BigDecimal price,
-                              int duration, LocalDateTime createDate,
+                              Integer duration, LocalDateTime createDate,
                               LocalDateTime lastUpdateDate, Set<TagDto> tags) {
         this.name = name;
         this.price = price;
@@ -159,7 +159,7 @@ public class GiftCertificateDto {
      *
      * @return duration (in days) of the gift certificate validity
      */
-    public int getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
@@ -168,7 +168,7 @@ public class GiftCertificateDto {
      *
      * @param duration duration (in days) of the gift certificate validity
      */
-    public void setDuration(int duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 

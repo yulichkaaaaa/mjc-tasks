@@ -15,7 +15,7 @@ public class GiftCertificate {
     private String name;
     private String description;
     private BigDecimal price;
-    private int duration;
+    private Integer duration;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
 
@@ -33,7 +33,7 @@ public class GiftCertificate {
      */
     public GiftCertificate(long id, String name,
                            String description, BigDecimal price,
-                           int duration, LocalDateTime createDate,
+                           Integer duration, LocalDateTime createDate,
                            LocalDateTime lastUpdateDate) {
         this.id = id;
         this.name = name;
@@ -56,7 +56,7 @@ public class GiftCertificate {
      * @param lastUpdateDate date when the gift certificate was updated last time
      */
     public GiftCertificate(String name, String description,
-                           BigDecimal price, int duration,
+                           BigDecimal price, Integer duration,
                            LocalDateTime createDate, LocalDateTime lastUpdateDate) {
         this.name = name;
         this.description = description;
@@ -148,7 +148,7 @@ public class GiftCertificate {
      *
      * @return duration (in days) of the gift certificate validity
      */
-    public int getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
@@ -157,7 +157,7 @@ public class GiftCertificate {
      *
      * @param duration duration (in days) of the gift certificate validity
      */
-    public void setDuration(int duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 

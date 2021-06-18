@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -175,10 +176,14 @@ public class GiftCertificateController {
         giftCertificate.addTag(new TagDto(tagName));
         List<GiftCertificateDto> giftCertificates = giftCertificateService
                 .findGiftCertificatesByCriteria(giftCertificate);
-        List<String> sortCriteriaList = Arrays
-                .stream(sortCriteria.split(","))
-                .collect(Collectors.toList());
-        return sortService.sortGiftCertificates(giftCertificates, sortCriteriaList, sortDirection);
+        List<String> sortCriteriaList = new ArrayList<>();
+        if (sortCriteria != null) {
+            sortCriteriaList = Arrays
+                    .stream(sortCriteria.split(","))
+                    .collect(Collectors.toList());
+        }
+        return sortCriteria != null ? sortService
+                .sortGiftCertificates(giftCertificates, sortCriteriaList, sortDirection) : giftCertificates;
     }
 
     /**
