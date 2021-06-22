@@ -16,20 +16,20 @@ public class TagValidatorTest {
     private TagValidator tagValidator;
 
     @BeforeAll
-    public void init(){
+    public void init() {
         tagValidator = new TagValidator();
         errors = Mockito.mock(Errors.class);
     }
 
     @Test
-    public void validateTagTest(){
+    public void validateTagTest() {
         TagDto tagDto = new TagDto("birthday");
         tagValidator.validate(tagDto, errors);
         Mockito.verify(errors, Mockito.times(0)).reject(Mockito.anyString());
     }
 
     @Test
-    public void validateNameEmptyTest(){
+    public void validateNameEmptyTest() {
         TagDto tagDto = new TagDto("");
         tagValidator.validate(tagDto, errors);
         Mockito.verify(errors, Mockito.times(1))
@@ -37,7 +37,7 @@ public class TagValidatorTest {
     }
 
     @Test
-    public void validateNameTooLongTest(){
+    public void validateNameTooLongTest() {
         TagDto tagDto = new TagDto("birthdayjsdkljjjjjjjjjjjjjjjjjjjj" +
                 "jjjjjjjjjjjjjjjjjjjjjjjjjzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" +
                 "zzzzzzzzzzzzzzzzzzzzzzzzzz");

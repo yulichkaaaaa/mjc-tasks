@@ -23,12 +23,12 @@ public class GiftCertificate {
      * Construct gift certificate object with given id, name, description,
      * price, duration, createDate, lastUpdateDate.
      *
-     * @param id id of the gift certificate
-     * @param name name of the gift certificate
-     * @param description description of the gift certificate
-     * @param price price of the gift certificate
-     * @param duration duration (in days) of the gift certificate validity
-     * @param createDate date when the gift certificate was created
+     * @param id             id of the gift certificate
+     * @param name           name of the gift certificate
+     * @param description    description of the gift certificate
+     * @param price          price of the gift certificate
+     * @param duration       duration (in days) of the gift certificate validity
+     * @param createDate     date when the gift certificate was created
      * @param lastUpdateDate date when the gift certificate was updated last time
      */
     public GiftCertificate(long id, String name,
@@ -48,11 +48,11 @@ public class GiftCertificate {
      * Construct gift certificate object with given name, description,
      * price, duration, createDate, lastUpdateDate.
      *
-     * @param name name of the gift certificate
-     * @param description description of the gift certificate
-     * @param price price of the gift certificate
-     * @param duration duration (in days) of the gift certificate validity
-     * @param createDate date when the gift certificate was created
+     * @param name           name of the gift certificate
+     * @param description    description of the gift certificate
+     * @param price          price of the gift certificate
+     * @param duration       duration (in days) of the gift certificate validity
+     * @param createDate     date when the gift certificate was created
      * @param lastUpdateDate date when the gift certificate was updated last time
      */
     public GiftCertificate(String name, String description,
@@ -69,7 +69,8 @@ public class GiftCertificate {
     /**
      * Construct gift certificate object.
      */
-    public GiftCertificate(){}
+    public GiftCertificate() {
+    }
 
     /**
      * Getter method of the gift certificate id.

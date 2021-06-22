@@ -40,7 +40,7 @@ public class LocaleService {
      * Getter method of the localized messages.
      *
      * @param messageName message's text
-     * @param args arguments
+     * @param args        arguments
      * @return localized message
      */
     public String getLocaleMessage(String messageName, Object... args) {

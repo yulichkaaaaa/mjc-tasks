@@ -5,7 +5,7 @@ package com.epam.esm.error;
  *
  * @author Shuleiko Yulia
  */
-public class Error {
+public class CustomError {
 
     private int code;
     private String message;
@@ -15,7 +15,7 @@ public class Error {
      * @param code error's code
      * @param message error's message
      */
-    public Error(int code, String message) {
+    public CustomError(int code, String message) {
         this.code = code;
         this.message = message;
     }

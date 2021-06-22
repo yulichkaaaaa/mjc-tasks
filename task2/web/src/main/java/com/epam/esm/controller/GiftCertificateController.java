@@ -3,7 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.error.CustomErrorCode;
-import com.epam.esm.error.Error;
+import com.epam.esm.error.CustomError;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * @author Shuleiko Yulia
  */
 @RestController
-@RequestMapping("gift-certificate")
+@RequestMapping("gift-certificates")
 public class GiftCertificateController {
 
     private static final String ENTITY_NOT_FOUND_ERROR = "entity_not_found";
@@ -107,7 +107,7 @@ public class GiftCertificateController {
      * @return the {@code GiftCertificateDto} object
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public GiftCertificateDto findGiftCertificateById(@PathVariable long id){
+    public GiftCertificateDto findGiftCertificateById(@PathVariable long id) {
         return giftCertificateService.findGiftCertificateById(id);
     }
 
@@ -118,7 +118,7 @@ public class GiftCertificateController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteGiftCertificateById(@PathVariable long id){
+    public void deleteGiftCertificateById(@PathVariable long id) {
         giftCertificateService.deleteGiftCertificateById(id);
     }
 
@@ -126,12 +126,12 @@ public class GiftCertificateController {
      * Create new certificate.
      *
      * @param giftCertificateDto the {@code GiftCertificateDto} object
-     * @param bindingResult the {@code BindingResult} object
+     * @param bindingResult      the {@code BindingResult} object
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public void createGiftCertificate(@RequestBody @Valid GiftCertificateDto giftCertificateDto,
-                                                    BindingResult bindingResult){
+                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new NotValidFieldsException(bindingResult);
         }
@@ -142,13 +142,13 @@ public class GiftCertificateController {
      * Update gift certificate.
      *
      * @param giftCertificateDto the {@code GiftCertificateDto} object
-     * @param bindingResult the {@code BindingResult} object
+     * @param bindingResult      the {@code BindingResult} object
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateGiftCertificate(@PathVariable long id,
                                       @RequestBody @Valid GiftCertificateDto giftCertificateDto,
-                                      BindingResult bindingResult){
+                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new NotValidFieldsException(bindingResult);
         }
@@ -159,8 +159,8 @@ public class GiftCertificateController {
     /**
      * Find certificates by criteria.
      *
-     * @param tagName name of tag
-     * @param giftCertificateName part of the name of the certificate
+     * @param tagName                    name of tag
+     * @param giftCertificateName        part of the name of the certificate
      * @param giftCertificateDescription part of the description of the certificate
      * @return list of the certificates
      */
@@ -194,8 +194,8 @@ public class GiftCertificateController {
      */
     @ExceptionHandler(EntityNotExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Error handleGiftCertificateNotExists(EntityNotExistException ex){
-        return new Error(CustomErrorCode.GIFT_CERTIFICATE_NOT_EXIST.code,
+    public CustomError handleGiftCertificateNotExists(EntityNotExistException ex) {
+        return new CustomError(CustomErrorCode.GIFT_CERTIFICATE_NOT_EXIST.code,
                 localeService.getLocaleMessage(ENTITY_NOT_EXIST_ERROR, ex.getId()));
     }
 
@@ -207,8 +207,8 @@ public class GiftCertificateController {
      */
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Error handleGiftCertificateNotFound(EntityNotFoundException ex){
-        return new Error(CustomErrorCode.GIFT_CERTIFICATE_NOT_FOUND.code,
+    public CustomError handleGiftCertificateNotFound(EntityNotFoundException ex) {
+        return new CustomError(CustomErrorCode.GIFT_CERTIFICATE_NOT_FOUND.code,
                 localeService.getLocaleMessage(ENTITY_NOT_FOUND_ERROR, ex.getId()));
     }
 
@@ -220,8 +220,8 @@ public class GiftCertificateController {
      */
     @ExceptionHandler(EntityAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Error handleGiftCertificateAlreadyExists(EntityAlreadyExistsException ex){
-        return new Error(CustomErrorCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
+    public CustomError handleGiftCertificateAlreadyExists(EntityAlreadyExistsException ex) {
+        return new CustomError(CustomErrorCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
                 localeService.getLocaleMessage(ENTITY_ALREADY_EXISTS_ERROR, ex.getId()));
     }
 
@@ -233,16 +233,16 @@ public class GiftCertificateController {
      */
     @ExceptionHandler(NotValidFieldsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Error handleGiftCertificateFieldsNotValid(NotValidFieldsException ex){
+    public CustomError handleGiftCertificateFieldsNotValid(NotValidFieldsException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         StringBuilder errorMessage = new StringBuilder();
         for (Object object : bindingResult.getAllErrors()) {
-            if(object instanceof FieldError){
+            if (object instanceof FieldError) {
                 FieldError fieldError = (FieldError) object;
                 errorMessage.append(localeService.getLocaleMessage(fieldError.getCode()));
             }
         }
-        return new Error(CustomErrorCode.GIFT_CERTIFICATE_FIELDS_NOT_VALID.code,
+        return new CustomError(CustomErrorCode.GIFT_CERTIFICATE_FIELDS_NOT_VALID.code,
                 errorMessage.toString());
     }
 

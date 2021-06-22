@@ -72,4 +72,11 @@ public interface TagRepository {
      * @param tagId id of the tag
      */
     void connectTagsToGiftCertificate(long giftCertificateId, long tagId);
+
+    /**
+     * Remove connection between tag and gift certificates.
+     *
+     * @param tagId id of the tag
+     */
+    void disconnectGiftCertificatesFromTag(long tagId);
 }

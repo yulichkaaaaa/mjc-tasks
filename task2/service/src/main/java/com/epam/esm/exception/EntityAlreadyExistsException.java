@@ -5,7 +5,7 @@ package com.epam.esm.exception;
  *
  * @author Shuleiko Yulia
  */
-public class EntityAlreadyExistsException extends RuntimeException{
+public class EntityAlreadyExistsException extends RuntimeException {
 
     private long id;
 
@@ -14,7 +14,7 @@ public class EntityAlreadyExistsException extends RuntimeException{
      *
      * @param id id of the entity
      */
-    public EntityAlreadyExistsException(long id){
+    public EntityAlreadyExistsException(long id) {
         this.id = id;
     }
 

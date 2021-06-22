@@ -9,12 +9,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.zaxxer:HikariCP:${hikariVersion}"
-    implementation "org.springframework:spring-webmvc:${webMvcVersion}"
-    implementation "org.springframework:spring-jdbc:${jdbcVersion}"
-    implementation "org.springframework:spring-web:${springVersion}"
-    testImplementation "org.springframework:spring-test:${springTestVersion}"
     implementation "com.h2database:h2:${h2Version}"
+    implementation "mysql:mysql-connector-java:${mySqlConnectorVersion}"
 }
 
 test {

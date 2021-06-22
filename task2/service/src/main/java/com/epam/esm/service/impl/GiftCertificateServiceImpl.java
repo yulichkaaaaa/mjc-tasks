@@ -81,7 +81,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDto findGiftCertificateById(long giftCertificateId) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateRepository
                 .findGiftCertificateById(giftCertificateId);
-        if(giftCertificateOptional.isEmpty()){
+        if (giftCertificateOptional.isEmpty()) {
             throw new EntityNotFoundException(giftCertificateId);
         }
         GiftCertificate giftCertificate = giftCertificateOptional.get();
@@ -113,13 +113,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public void updateGiftCertificate(GiftCertificateDto giftCertificateDto) {
         long giftCertificateId = giftCertificateDto.getId();
-        if(!giftCertificateExists(giftCertificateId)){
+        if (!giftCertificateExists(giftCertificateId)) {
             throw new EntityNotExistException(giftCertificateId);
         }
         GiftCertificate giftCertificate = giftCertificateDtoConverter.convertToEntity(giftCertificateDto);
         giftCertificate.setLastUpdateDate(LocalDateTime.now());
         giftCertificateRepository.updateGiftCertificate(giftCertificate);
-        if(!giftCertificateDto.getTags().isEmpty()){
+        if (!giftCertificateDto.getTags().isEmpty()) {
             tagRepository.disconnectTagsFromGiftCertificate(giftCertificateId);
             updateTags(giftCertificateDto.getTags(), giftCertificateId);
         }
@@ -131,7 +131,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     @Override
     public void deleteGiftCertificateById(long giftCertificateId) {
-        if(!giftCertificateExists(giftCertificateId)){
+        if (!giftCertificateExists(giftCertificateId)) {
             throw new EntityNotExistException(giftCertificateId);
         }
         tagRepository.disconnectTagsFromGiftCertificate(giftCertificateId);
@@ -165,10 +165,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     /**
      * Insert new tags into the storage and create connections between certificate and tag.
      *
-     * @param tags set of tags
+     * @param tags              set of tags
      * @param giftCertificateId id of gift certificate
      */
-    private void updateTags(Set<TagDto> tags, long giftCertificateId){
+    private void updateTags(Set<TagDto> tags, long giftCertificateId) {
         tags.stream()
                 .filter(tag -> tagRepository.findTagByName(tag.getName()).isEmpty())
                 .forEach(tag -> tagRepository.createTag(tagDtoConverter.convertToEntity(tag)));
@@ -243,11 +243,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * @param giftCertificateId id of the certificate
      * @return {@code true} if certificate exists in storage
      */
-    private boolean giftCertificateExists(long giftCertificateId){
+    private boolean giftCertificateExists(long giftCertificateId) {
         boolean isGiftCertificateExists = false;
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateRepository
                 .findGiftCertificateById(giftCertificateId);
-        if(giftCertificateOptional.isPresent()){
+        if (giftCertificateOptional.isPresent()) {
             isGiftCertificateExists = true;
         }
         return isGiftCertificateExists;

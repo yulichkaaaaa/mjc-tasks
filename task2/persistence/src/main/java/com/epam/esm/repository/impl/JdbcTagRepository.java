@@ -30,8 +30,10 @@ public class JdbcTagRepository implements TagRepository {
             "FROM tag JOIN tag_m2m_gift_certificate " +
             "ON tag.id = tag_m2m_gift_certificate.tag_id " +
             "WHERE tag_m2m_gift_certificate.gift_certificate_id = ?";
-    private static final String SQL_DELETE_TAG_AND_GIFT_CERTIFICATE_CONNECTION = "DELETE " +
+    private static final String SQL_DELETE_CONNECTION_BY_GIFT_CERTIFICATE_ID = "DELETE " +
             "FROM tag_m2m_gift_certificate WHERE gift_certificate_id = ?";
+    private static final String SQL_DELETE_CONNECTION_BY_TAG_ID = "DELETE " +
+            "FROM tag_m2m_gift_certificate WHERE tag_id = ?";
     private static final String SQL_INSERT_TAG_AND_GIFT_CERTIFICATE_CONNECTION = "INSERT " +
             "INTO tag_m2m_gift_certificate (gift_certificate_id, tag_id) VALUES (?, ?)";
     private static final String SQL_SELECT_TAGS_BY_GIFT_CERTIFICATE_ID_AND_TAG_ID = "SELECT tag.id, tag.name " +
@@ -92,7 +94,7 @@ public class JdbcTagRepository implements TagRepository {
      */
     @Override
     public void disconnectTagsFromGiftCertificate(long giftCertificateId) {
-        jdbcTemplate.update(SQL_DELETE_TAG_AND_GIFT_CERTIFICATE_CONNECTION, giftCertificateId);
+        jdbcTemplate.update(SQL_DELETE_CONNECTION_BY_GIFT_CERTIFICATE_ID, giftCertificateId);
     }
 
     /**
@@ -125,6 +127,11 @@ public class JdbcTagRepository implements TagRepository {
         jdbcTemplate.update(SQL_INSERT_TAG_AND_GIFT_CERTIFICATE_CONNECTION,
                 giftCertificateId,
                 tagId);
+    }
+
+    @Override
+    public void disconnectGiftCertificatesFromTag(long tagId) {
+        jdbcTemplate.update(SQL_DELETE_CONNECTION_BY_TAG_ID,tagId);
     }
 
     /**

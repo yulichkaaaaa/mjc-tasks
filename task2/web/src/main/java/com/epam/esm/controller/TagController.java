@@ -1,8 +1,8 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.TagDto;
-import com.epam.esm.error.Error;
 import com.epam.esm.error.CustomErrorCode;
+import com.epam.esm.error.CustomError;
 import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
@@ -32,7 +32,7 @@ import javax.validation.Valid;
  * @author Shuleiko Yulia
  */
 @RestController
-@RequestMapping("tag")
+@RequestMapping("tags")
 public class TagController {
 
     private static final String ENTITY_NOT_FOUND_ERROR = "entity_not_found";
@@ -89,7 +89,7 @@ public class TagController {
      */
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteTag(@PathVariable long id){
+    public void deleteTag(@PathVariable long id) {
         tagService.deleteTag(id);
     }
 
@@ -100,20 +100,20 @@ public class TagController {
      * @return the {@code TagDto} object
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public TagDto findTagById(@PathVariable long id){
+    public TagDto findTagById(@PathVariable long id) {
         return tagService.findTagById(id);
     }
 
     /**
      * Create new tag.
      *
-     * @param tagDto the {@code TagDto} object
+     * @param tagDto        the {@code TagDto} object
      * @param bindingResult the {@code BindingResult} object
      */
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
-    public void createTag(@RequestBody @Valid TagDto tagDto, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
+    public void createTag(@RequestBody @Valid TagDto tagDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             throw new NotValidFieldsException(bindingResult);
         }
         tagService.createTag(tagDto);
@@ -127,8 +127,8 @@ public class TagController {
      */
     @ExceptionHandler(EntityNotExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Error handleTagNotExists(EntityNotExistException ex){
-        return new Error(CustomErrorCode.TAG_NOT_EXIST.code,
+    public CustomError handleTagNotExists(EntityNotExistException ex) {
+        return new CustomError(CustomErrorCode.TAG_NOT_EXIST.code,
                 localeService.getLocaleMessage(ENTITY_NOT_EXIST_ERROR, ex.getId()));
     }
 
@@ -140,8 +140,8 @@ public class TagController {
      */
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Error handleTagNotFound(EntityNotFoundException ex){
-        return new Error(CustomErrorCode.TAG_NOT_FOUND.code,
+    public CustomError handleTagNotFound(EntityNotFoundException ex) {
+        return new CustomError(CustomErrorCode.TAG_NOT_FOUND.code,
                 localeService.getLocaleMessage(ENTITY_NOT_FOUND_ERROR, ex.getId()));
     }
 
@@ -153,8 +153,8 @@ public class TagController {
      */
     @ExceptionHandler(EntityAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Error handleTagAlreadyExists(EntityAlreadyExistsException ex){
-        return new Error(CustomErrorCode.TAG_ALREADY_EXISTS.code,
+    public CustomError handleTagAlreadyExists(EntityAlreadyExistsException ex) {
+        return new CustomError(CustomErrorCode.TAG_ALREADY_EXISTS.code,
                 localeService.getLocaleMessage(ENTITY_ALREADY_EXISTS_ERROR, ex.getId()));
     }
 
@@ -166,16 +166,16 @@ public class TagController {
      */
     @ExceptionHandler(NotValidFieldsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Error handleTagFieldsNotValid(NotValidFieldsException ex){
+    public CustomError handleTagFieldsNotValid(NotValidFieldsException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         StringBuilder errorMessage = new StringBuilder();
         for (Object object : bindingResult.getAllErrors()) {
-            if(object instanceof FieldError){
+            if (object instanceof FieldError) {
                 FieldError fieldError = (FieldError) object;
                 errorMessage.append(localeService.getLocaleMessage(fieldError.getCode()));
             }
         }
-        return new Error(CustomErrorCode.TAG_FIELDS_NOT_VALID.code, errorMessage.toString());
+        return new CustomError(CustomErrorCode.TAG_FIELDS_NOT_VALID.code, errorMessage.toString());
     }
 }
 

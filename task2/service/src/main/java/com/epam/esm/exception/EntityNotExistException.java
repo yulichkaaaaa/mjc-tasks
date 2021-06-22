@@ -5,7 +5,7 @@ package com.epam.esm.exception;
  *
  * @author Shuleiko Yulia
  */
-public class EntityNotExistException extends RuntimeException{
+public class EntityNotExistException extends RuntimeException {
 
     private long id;
 
@@ -14,7 +14,7 @@ public class EntityNotExistException extends RuntimeException{
      *
      * @param id id of the entity
      */
-    public EntityNotExistException(long id){
+    public EntityNotExistException(long id) {
         this.id = id;
     }
 

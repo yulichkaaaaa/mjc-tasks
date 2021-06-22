@@ -24,7 +24,7 @@ public class TagDto {
     /**
      * Construct object with given id and name.
      *
-     * @param id id of the tag
+     * @param id   id of the tag
      * @param name name of the tag
      */
     public TagDto(long id, String name) {
@@ -32,7 +32,8 @@ public class TagDto {
         this.name = name;
     }
 
-    public TagDto() {}
+    public TagDto() {
+    }
 
     /**
      * Getter method of the tag id.

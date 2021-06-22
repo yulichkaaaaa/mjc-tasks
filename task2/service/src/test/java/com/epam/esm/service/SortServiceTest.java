@@ -1,7 +1,10 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.GiftCertificateDto;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,7 +22,7 @@ public class SortServiceTest {
     private List<GiftCertificateDto> giftCertificates;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         sortService = new SortService();
         initGiftCertificates();
     }
@@ -47,7 +50,7 @@ public class SortServiceTest {
     }
 
     @Test
-    public void sortGiftCertificateByNameAscTest(){
+    public void sortGiftCertificateByNameAscTest() {
         List<GiftCertificateDto> result = sortService
                 .sortGiftCertificates(giftCertificates, Collections.singletonList("name"), "asc");
         Assertions.assertEquals(2, result.get(0).getId());
@@ -56,7 +59,7 @@ public class SortServiceTest {
     }
 
     @Test
-    public void sortGiftCertificateByNameDescTest(){
+    public void sortGiftCertificateByNameDescTest() {
         List<GiftCertificateDto> result = sortService
                 .sortGiftCertificates(giftCertificates, Collections.singletonList("name"), "desc");
         Assertions.assertEquals(3, result.get(0).getId());
@@ -65,7 +68,7 @@ public class SortServiceTest {
     }
 
     @Test
-    public void sortGiftCertificateByDateAscTest(){
+    public void sortGiftCertificateByDateAscTest() {
         List<GiftCertificateDto> result = sortService
                 .sortGiftCertificates(giftCertificates, Collections.singletonList("create_date"), "asc");
         Assertions.assertEquals(4, result.get(0).getId());
@@ -74,7 +77,7 @@ public class SortServiceTest {
     }
 
     @Test
-    public void sortGiftCertificateByDateDescTest(){
+    public void sortGiftCertificateByDateDescTest() {
         List<GiftCertificateDto> result = sortService
                 .sortGiftCertificates(giftCertificates, Collections.singletonList("create_date"), "desc");
         Assertions.assertEquals(3, result.get(0).getId());
@@ -83,7 +86,7 @@ public class SortServiceTest {
     }
 
     @Test
-    public void sortGiftCertificateByNameAndDateTest(){
+    public void sortGiftCertificateByNameAndDateTest() {
         giftCertificates.add(new GiftCertificateDto(5, "diving",
                 "See the beauty of the ocean",
                 new BigDecimal("50.60"), 18,

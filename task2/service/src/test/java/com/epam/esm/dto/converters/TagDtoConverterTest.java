@@ -15,12 +15,12 @@ public class TagDtoConverterTest {
     private TagDto tagDto;
 
     @BeforeAll
-    public void init(){
+    public void init() {
         tagDtoConverter = new TagDtoConverter();
         initTagData();
     }
 
-    private void initTagData(){
+    private void initTagData() {
         long id = 12;
         String name = "birthday";
         tag = new Tag(id, name);
@@ -28,12 +28,12 @@ public class TagDtoConverterTest {
     }
 
     @Test
-    public void convertToDtoTest(){
+    public void convertToDtoTest() {
         Assertions.assertEquals(tagDto, tagDtoConverter.convertToDto(tag));
     }
 
     @Test
-    public void convertToEntityTest(){
+    public void convertToEntityTest() {
         Assertions.assertEquals(tag, tagDtoConverter.convertToEntity(tagDto));
     }
 

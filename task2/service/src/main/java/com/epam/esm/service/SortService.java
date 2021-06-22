@@ -42,21 +42,21 @@ public class SortService {
      * Sort list of gift certificates.
      *
      * @param giftCertificates list of gift certificates
-     * @param criteriaList list of criteria of sorting (name, date)
-     * @param direction direction of sorting (asc or desc)
+     * @param criteriaList     list of criteria of sorting (name, date)
+     * @param direction        direction of sorting (asc or desc)
      * @return list of gift certificates
      */
     public List<GiftCertificateDto> sortGiftCertificates(List<GiftCertificateDto> giftCertificates,
-                                         List<String> criteriaList,
-                                         String direction) {
+                                                         List<String> criteriaList,
+                                                         String direction) {
         List<Comparator> comparators = criteriaList
                 .stream()
                 .filter(criteria -> comparatorMap.containsKey(criteria))
                 .map(criteria -> comparatorMap.get(criteria))
                 .collect(Collectors.toList());
-        if(!comparators.isEmpty()) {
+        if (!comparators.isEmpty()) {
             Comparator<GiftCertificateDto> comparator = comparators.remove(0);
-            for (Comparator nextComparator : comparators){
+            for (Comparator nextComparator : comparators) {
                 comparator = comparator.thenComparing(nextComparator);
             }
             if (direction.equals(DIRECTION_DESC)) {

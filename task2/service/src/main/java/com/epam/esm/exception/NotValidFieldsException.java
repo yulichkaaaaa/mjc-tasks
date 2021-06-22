@@ -7,7 +7,7 @@ import org.springframework.validation.BindingResult;
  *
  * @author Shuleiko Yulia
  */
-public class NotValidFieldsException extends RuntimeException{
+public class NotValidFieldsException extends RuntimeException {
 
     private BindingResult bindingResult;
 
@@ -16,7 +16,7 @@ public class NotValidFieldsException extends RuntimeException{
      *
      * @param bindingResult the {@code BindingResult} object
      */
-    public NotValidFieldsException(BindingResult bindingResult){
+    public NotValidFieldsException(BindingResult bindingResult) {
         this.bindingResult = bindingResult;
     }
 

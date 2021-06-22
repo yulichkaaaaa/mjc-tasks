@@ -67,6 +67,7 @@ public class TagServiceImpl implements TagService {
         if(tagOptional.isEmpty()) {
             throw new EntityNotExistException(tagId);
         }
+        tagRepository.disconnectGiftCertificatesFromTag(tagId);
         tagRepository.deleteTag(tagId);
     }
 

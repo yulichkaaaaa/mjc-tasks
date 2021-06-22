@@ -23,7 +23,7 @@ public class GiftCertificateValidatorTest {
     private GiftCertificateDto giftCertificate;
 
     @BeforeAll
-    public void init(){
+    public void init() {
         giftCertificateValidator = new GiftCertificateValidator();
         MockitoAnnotations.openMocks(this);
         giftCertificate = new GiftCertificateDto("skydiving",
@@ -35,13 +35,13 @@ public class GiftCertificateValidatorTest {
     }
 
     @Test
-    public void validateGiftCertificateTest(){
+    public void validateGiftCertificateTest() {
         giftCertificateValidator.validate(giftCertificate, errors);
         Mockito.verify(errors, Mockito.times(0)).reject(Mockito.anyString());
     }
 
     @Test
-    public void validateNameEmptyTest(){
+    public void validateNameEmptyTest() {
         giftCertificate.setName("");
         giftCertificateValidator.validate(giftCertificate, errors);
         Mockito.verify(errors, Mockito.times(1))
@@ -49,7 +49,7 @@ public class GiftCertificateValidatorTest {
     }
 
     @Test
-    public void validateNameTooLongTest(){
+    public void validateNameTooLongTest() {
         giftCertificate.setName("birthdayjsdkljjjjjjjjjjjjjjjjjjjj" +
                 "jjjjjjjjjjjjjjjjjjjjjjjjjzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" +
                 "zzzzzzzzzzzzzzzzzzzzzzzzzz");
@@ -59,7 +59,7 @@ public class GiftCertificateValidatorTest {
     }
 
     @Test
-    public void validateDescriptionEmptyTest(){
+    public void validateDescriptionEmptyTest() {
         giftCertificate.setDescription("");
         giftCertificateValidator.validate(giftCertificate, errors);
         Mockito.verify(errors, Mockito.times(1))
@@ -67,7 +67,7 @@ public class GiftCertificateValidatorTest {
     }
 
     @Test
-    public void validatePriceNotPositiveTest(){
+    public void validatePriceNotPositiveTest() {
         giftCertificate.setPrice(new BigDecimal("-89.00"));
         giftCertificateValidator.validate(giftCertificate, errors);
         Mockito.verify(errors, Mockito.times(1))
@@ -75,7 +75,7 @@ public class GiftCertificateValidatorTest {
     }
 
     @Test
-    public void validateDurationNotPositiveTest(){
+    public void validateDurationNotPositiveTest() {
         giftCertificate.setDuration(-9);
         giftCertificateValidator.validate(giftCertificate, errors);
         Mockito.verify(errors, Mockito.times(1))
@@ -83,7 +83,7 @@ public class GiftCertificateValidatorTest {
     }
 
     @Test
-    public void validateCreateDateInFutureTest(){
+    public void validateCreateDateInFutureTest() {
         giftCertificate.setCreateDate(LocalDateTime.of(2022, Month.FEBRUARY, 22, 0, 0));
         giftCertificateValidator.validate(giftCertificate, errors);
         Mockito.verify(errors, Mockito.times(1))

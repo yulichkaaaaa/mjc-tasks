@@ -15,12 +15,13 @@ public class Tag {
     /**
      * Construct tag object.
      */
-    public Tag(){}
+    public Tag() {
+    }
 
     /**
      * Construct tag object with given id and name.
      *
-     * @param id id of the tag
+     * @param id   id of the tag
      * @param name name of the tag
      */
     public Tag(long id, String name) {

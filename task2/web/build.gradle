@@ -10,9 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':persistence')
     implementation project(':service')
-    compileOnly "javax.servlet:javax.servlet-api:${servletVersion}"
     implementation "com.fasterxml.jackson.core:jackson-core:${jacksonCoreVersion}"
     implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonAnnotationsVersion}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonDatatypeVersion}"

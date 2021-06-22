@@ -5,7 +5,7 @@ package com.epam.esm.exception;
  *
  * @author Shuleiko Yulia
  */
-public class EntityNotFoundException extends RuntimeException{
+public class EntityNotFoundException extends RuntimeException {
 
     private long id;
 
@@ -14,7 +14,7 @@ public class EntityNotFoundException extends RuntimeException{
      *
      * @param id id of the entity
      */
-    public EntityNotFoundException(long id){
+    public EntityNotFoundException(long id) {
         this.id = id;
     }
 

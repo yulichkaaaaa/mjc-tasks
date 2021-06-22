@@ -18,7 +18,7 @@ public class TagDtoConverter {
      * @param tag the {@code Tag} object
      * @return the {@code TagDto} object
      */
-    public TagDto convertToDto(Tag tag){
+    public TagDto convertToDto(Tag tag) {
         return new TagDto(tag.getId(),
                 tag.getName());
     }
@@ -29,7 +29,7 @@ public class TagDtoConverter {
      * @param tagDto the {@code TagDto} object
      * @return the {@code Tag} object
      */
-    public Tag convertToEntity(TagDto tagDto){
+    public Tag convertToEntity(TagDto tagDto) {
         return new Tag(tagDto.getId(),
                 tagDto.getName());
     }

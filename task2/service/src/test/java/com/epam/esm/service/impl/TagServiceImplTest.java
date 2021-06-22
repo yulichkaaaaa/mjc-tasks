@@ -27,7 +27,7 @@ public class TagServiceImplTest {
     private TagDtoConverter tagDtoConverter;
 
     @BeforeAll
-    public void init(){
+    public void init() {
         tagService = new TagServiceImpl();
         tagRepository = new JdbcTagRepository();
         tagDtoConverter = new TagDtoConverter();
@@ -37,7 +37,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void createTagTest(){
+    public void createTagTest() {
         long id = 1;
         String name = "nature";
         Tag tag = new Tag(id, name);
@@ -47,7 +47,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void createTagAlreadyExistTest(){
+    public void createTagAlreadyExistTest() {
         long id = 1;
         String name = "nature";
         Tag tag = new Tag(id, name);
@@ -57,7 +57,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void findTagByIdTest(){
+    public void findTagByIdTest() {
         long id = 1;
         String name = "nature";
         Tag tag = new Tag(1, name);
@@ -67,14 +67,14 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void findTagByIdNotFoundTest(){
+    public void findTagByIdNotFoundTest() {
         long id = 10;
         Mockito.when(tagRepository.findTagById(id)).thenReturn(Optional.empty());
         Assertions.assertThrows(EntityNotFoundException.class, () -> tagService.findTagById(id));
     }
 
     @Test
-    public void deleteTagTest(){
+    public void deleteTagTest() {
         long id = 1;
         String name = "nature";
         Tag tag = new Tag(id, name);
@@ -84,7 +84,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void deleteTagNotExistTest(){
+    public void deleteTagNotExistTest() {
         long id = 10;
         Mockito.when(tagRepository.findTagById(id)).thenReturn(Optional.empty());
         Assertions.assertThrows(EntityNotExistException.class, () -> tagService.deleteTag(id));

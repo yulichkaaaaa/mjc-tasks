@@ -41,7 +41,7 @@ public class GiftCertificateServiceTest {
     private GiftCertificateDto giftCertificateDto;
 
     @BeforeAll
-    public void init(){
+    public void init() {
         giftCertificateService = new GiftCertificateServiceImpl();
         setConverters();
         setRepositories();
@@ -54,14 +54,14 @@ public class GiftCertificateServiceTest {
         giftCertificateDto = giftCertificateDtoConverter.convertToDto(giftCertificate, tags);
     }
 
-    private void setConverters(){
+    private void setConverters() {
         giftCertificateDtoConverter = new GiftCertificateDtoConverter();
         tagDtoConverter = new TagDtoConverter();
         giftCertificateService.setTagDtoConverter(tagDtoConverter);
         giftCertificateService.setGiftCertificateDtoConverter(giftCertificateDtoConverter);
     }
 
-    private void setRepositories(){
+    private void setRepositories() {
         giftCertificateRepository = new JdbcGiftCertificateRepository();
         tagRepository = new JdbcTagRepository();
         MockitoAnnotations.openMocks(this);
@@ -70,7 +70,7 @@ public class GiftCertificateServiceTest {
     }
 
     @Test
-    public void findGiftCertificateByIdTest(){
+    public void findGiftCertificateByIdTest() {
         long id = 1;
         Mockito.when(giftCertificateRepository.findGiftCertificateById(id))
                 .thenReturn(Optional.of(giftCertificate));
@@ -79,7 +79,7 @@ public class GiftCertificateServiceTest {
     }
 
     @Test
-    public void findGiftCertificateByIdNotFoundTest(){
+    public void findGiftCertificateByIdNotFoundTest() {
         long id = 100;
         Mockito.when(giftCertificateRepository.findGiftCertificateById(id))
                 .thenReturn(Optional.empty());
@@ -88,7 +88,7 @@ public class GiftCertificateServiceTest {
     }
 
     @Test
-    public void createGiftCertificateTest(){
+    public void createGiftCertificateTest() {
         Tag tag = tagDtoConverter.convertToEntity(giftCertificateDto.getTag(0));
         Mockito.when(tagRepository.findTagByName(tag.getName()))
                 .thenReturn(Optional.of(tag));
@@ -98,7 +98,7 @@ public class GiftCertificateServiceTest {
     }
 
     @Test
-    public void updateGiftCertificateTest(){
+    public void updateGiftCertificateTest() {
         Mockito.when(giftCertificateRepository.findGiftCertificateById(giftCertificateDto.getId()))
                 .thenReturn(Optional.of(giftCertificate));
         Tag tag = tagDtoConverter.convertToEntity(giftCertificateDto.getTag(0));
@@ -110,7 +110,7 @@ public class GiftCertificateServiceTest {
     }
 
     @Test
-    public void updateGiftCertificateNotExistTest(){
+    public void updateGiftCertificateNotExistTest() {
         Mockito.when(giftCertificateRepository.findGiftCertificateById(giftCertificateDto.getId()))
                 .thenReturn(Optional.empty());
         Assertions.assertThrows(EntityNotExistException.class,
@@ -118,7 +118,7 @@ public class GiftCertificateServiceTest {
     }
 
     @Test
-    public void deleteGiftCertificateTest(){
+    public void deleteGiftCertificateTest() {
         long id = giftCertificate.getId();
         Mockito.when(giftCertificateRepository.findGiftCertificateById(id))
                 .thenReturn(Optional.of(giftCertificate));
@@ -128,7 +128,7 @@ public class GiftCertificateServiceTest {
     }
 
     @Test
-    public void deleteGiftCertificateBotExistTest(){
+    public void deleteGiftCertificateBotExistTest() {
         long id = 100;
         Mockito.when(giftCertificateRepository.findGiftCertificateById(id))
                 .thenReturn(Optional.empty());

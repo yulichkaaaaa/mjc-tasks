@@ -6,13 +6,13 @@ subprojects { project ->
     }
 
     dependencies {
-        implementation "org.springframework:spring-webmvc:${springVersion}"
         testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
         testImplementation "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
-        testImplementation "org.springframework:spring-test:${springVersion}"
         testImplementation "org.mockito:mockito-core:${mockitoVersion}"
         implementation "javax.validation:validation-api:${validationApiVersion}"
+        implementation "org.springframework.boot:spring-boot-starter-web:${springWebVersion}"
+        implementation "org.springframework.boot:spring-boot-starter-tomcat:${springTomcatVersion}"
+        implementation "org.springframework.boot:spring-boot-starter-jdbc:${springJdbcVersion}"
     }
 
     test {

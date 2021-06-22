@@ -27,14 +27,13 @@ public class GiftCertificateDto {
      * Construct gift certificate object with given id, name, description,
      * price, duration, createDate, lastUpdateDate, tags.
      *
-     * @param id id of the gift certificate
-     * @param name name of the gift certificate
-     * @param description description of the gift certificate
-     * @param price price of the gift certificate
-     * @param duration duration (in days) of the gift certificate validity
-     * @param createDate date when the gift certificate was created
+     * @param id             id of the gift certificate
+     * @param name           name of the gift certificate
+     * @param description    description of the gift certificate
+     * @param price          price of the gift certificate
+     * @param duration       duration (in days) of the gift certificate validity
      * @param lastUpdateDate date when the gift certificate was updated last time
-     * @param tags set of tags of gift certificate
+     * @param tags           set of tags of gift certificate
      */
     public GiftCertificateDto(long id, String name, String description,
                               BigDecimal price, Integer duration, LocalDateTime createDate,
@@ -54,13 +53,12 @@ public class GiftCertificateDto {
      * Construct gift certificate object with given name, description,
      * price, duration, createDate, lastUpdateDate, tags.
      *
-     * @param name name of the gift certificate
-     * @param description description of the gift certificate
-     * @param price price of the gift certificate
-     * @param duration duration (in days) of the gift certificate validity
-     * @param createDate date when the gift certificate was created
+     * @param name           name of the gift certificate
+     * @param description    description of the gift certificate
+     * @param price          price of the gift certificate
+     * @param duration       duration (in days) of the gift certificate validity
      * @param lastUpdateDate date when the gift certificate was updated last time
-     * @param tags set of tags of gift certificate
+     * @param tags           set of tags of gift certificate
      */
     public GiftCertificateDto(String name, String description, BigDecimal price,
                               Integer duration, LocalDateTime createDate,
@@ -222,7 +220,7 @@ public class GiftCertificateDto {
      *
      * @param tagDto the {@code TagDto} object
      */
-    public void addTag(TagDto tagDto){
+    public void addTag(TagDto tagDto) {
         tags.add(tagDto);
     }
 
@@ -231,7 +229,7 @@ public class GiftCertificateDto {
      *
      * @param tags set of tags
      */
-    public void addTags(Set<TagDto> tags){
+    public void addTags(Set<TagDto> tags) {
         this.tags.addAll(tags);
     }
 
@@ -240,7 +238,7 @@ public class GiftCertificateDto {
      *
      * @param tagDto the {@code TagDto} object
      */
-    public void removeTag(TagDto tagDto){
+    public void removeTag(TagDto tagDto) {
         tags.remove(tagDto);
     }
 
@@ -259,7 +257,10 @@ public class GiftCertificateDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GiftCertificateDto that = (GiftCertificateDto) o;
-        return id == that.id && duration == that.duration && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(createDate, that.createDate) && Objects.equals(lastUpdateDate, that.lastUpdateDate) && Objects.equals(tags, that.tags);
+        return id == that.id && Objects.equals(name, that.name) && Objects.equals(description, that.description)
+                && Objects.equals(price, that.price) && Objects.equals(duration, that.duration)
+                && Objects.equals(createDate, that.createDate) && Objects.equals(lastUpdateDate, that.lastUpdateDate)
+                && Objects.equals(tags, that.tags);
     }
 
     @Override
