@@ -5,11 +5,13 @@ import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.converters.GiftCertificateDtoConverter;
 import com.epam.esm.dto.converters.TagDtoConverter;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.GiftCertificateService;
+import com.epam.esm.service.LocaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,8 +87,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             throw new EntityNotFoundException(giftCertificateId);
         }
         GiftCertificate giftCertificate = giftCertificateOptional.get();
-        Set<TagDto> tags = tagRepository
-                .findTagsByGiftCertificateId(giftCertificateId)
+        Set<TagDto> tags = giftCertificate.getTags()
                 .stream()
                 .map(tag -> tagDtoConverter.convertToDto(tag))
                 .collect(Collectors.toSet());
@@ -101,9 +102,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public void createGiftCertificate(GiftCertificateDto giftCertificateDto) {
         GiftCertificate giftCertificate = giftCertificateDtoConverter.convertToEntity(giftCertificateDto);
         giftCertificate.setCreateDate(LocalDateTime.now());
-        giftCertificate.setLastUpdateDate(LocalDateTime.now());
-        long giftCertificateId = giftCertificateRepository.createGiftCertificate(giftCertificate);
-        updateTags(giftCertificateDto.getTags(), giftCertificateId);
+        giftCertificate.setId(giftCertificateRepository.createGiftCertificate(giftCertificate));
+        updateTags(giftCertificateDto.getTags(), giftCertificate);
     }
 
     /**
@@ -120,8 +120,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificate.setLastUpdateDate(LocalDateTime.now());
         giftCertificateRepository.updateGiftCertificate(giftCertificate);
         if (!giftCertificateDto.getTags().isEmpty()) {
-            tagRepository.disconnectTagsFromGiftCertificate(giftCertificateId);
-            updateTags(giftCertificateDto.getTags(), giftCertificateId);
+            //tagRepository.disconnectTagsFromGiftCertificate(giftCertificateId);
+            //updateTags(giftCertificateDto.getTags(), giftCertificateId);
         }
     }
 
@@ -134,7 +134,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (!giftCertificateExists(giftCertificateId)) {
             throw new EntityNotExistException(giftCertificateId);
         }
-        tagRepository.disconnectTagsFromGiftCertificate(giftCertificateId);
+        //tagRepository.disconnectTagsFromGiftCertificate(giftCertificateId);
         giftCertificateRepository.deleteGiftCertificate(giftCertificateId);
     }
 
@@ -142,99 +142,36 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public List<GiftCertificateDto> findGiftCertificatesByCriteria(GiftCertificateDto giftCertificateDto) {
-        List<GiftCertificateDto> giftCertificates = new ArrayList<>();
-        if (!giftCertificateDto.getTags().isEmpty()) {
-            giftCertificates = findGiftCertificatesByTagName(giftCertificateDto.getTag(0));
-        }
-        if (giftCertificateDto.getName() != null || giftCertificateDto.getDescription() != null) {
-            List<GiftCertificateDto> foundGiftCertificates
-                    = findGiftCertificatesByNameAndDescription(giftCertificateDto);
-            if (giftCertificates.isEmpty()) {
-                giftCertificates = foundGiftCertificates;
-            } else {
-                giftCertificates = giftCertificates
+    public List<GiftCertificateDto> findGiftCertificatesByCriteria(GiftCertificateDto giftCertificateDto,
+                                                                   List<String> sortCriteria,
+                                                                   String sortDirection) {
+        String tagName = giftCertificateDto.getTag(0).getName();
+        List<GiftCertificate> giftCertificates = giftCertificateRepository
+                .findGiftCertificatesByCriteria(tagName, giftCertificateDto.getName(),
+                        giftCertificateDto.getDescription(), sortCriteria, sortDirection);
+        return giftCertificates
+                .stream()
+                .map(giftCertificate -> giftCertificateDtoConverter.convertToDto(giftCertificate, giftCertificate.getTags()
                         .stream()
-                        .filter(foundGiftCertificates::contains)
-                        .collect(Collectors.toList());
-            }
-        }
-        return giftCertificates;
+                        .map(tag -> tagDtoConverter.convertToDto(tag))
+                        .collect(Collectors.toSet())))
+                .collect(Collectors.toList());
     }
 
     /**
      * Insert new tags into the storage and create connections between certificate and tag.
      *
-     * @param tags              set of tags
-     * @param giftCertificateId id of gift certificate
+     * @param tags set of tags
+     * @param giftCertificate the {@code GiftCertificate} object
      */
-    private void updateTags(Set<TagDto> tags, long giftCertificateId) {
+    private void updateTags(Set<TagDto> tags, GiftCertificate giftCertificate) {
         tags.stream()
                 .filter(tag -> tagRepository.findTagByName(tag.getName()).isEmpty())
                 .forEach(tag -> tagRepository.createTag(tagDtoConverter.convertToEntity(tag)));
         tags.forEach(tag -> tag.setId(tagRepository.findTagByName(tag.getName()).get().getId()));
         tags.stream()
-                .filter(tag -> !tagRepository.connectionExists(giftCertificateId, tag.getId()))
-                .forEach(tag -> tagRepository.connectTagsToGiftCertificate(giftCertificateId, tag.getId()));
-    }
-
-    /**
-     * Find all gift certificates.
-     *
-     * @return list of the certificates
-     */
-    private List<GiftCertificateDto> findAllGiftCertificates() {
-        return giftCertificateRepository
-                .findAllGiftCertificates()
-                .stream()
-                .map(giftCertificate ->
-                        giftCertificateDtoConverter.convertToDto(giftCertificate, tagRepository
-                                .findTagsByGiftCertificateId(giftCertificate.getId())
-                                .stream()
-                                .map(tag -> tagDtoConverter.convertToDto(tag))
-                                .collect(Collectors.toSet()))
-                )
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Find certificates by tag's name.
-     *
-     * @param tagDto the {@code TagDto} object
-     * @return list of the certificates
-     */
-    private List<GiftCertificateDto> findGiftCertificatesByTagName(TagDto tagDto) {
-        return giftCertificateRepository
-                .findGiftCertificateByTagName(tagDto.getName())
-                .stream()
-                .map(giftCertificate ->
-                        giftCertificateDtoConverter.convertToDto(giftCertificate, tagRepository
-                                .findTagsByGiftCertificateId(giftCertificate.getId())
-                                .stream()
-                                .map(tag -> tagDtoConverter.convertToDto(tag))
-                                .collect(Collectors.toSet()))
-                )
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Find certificated by it's name and description parts.
-     *
-     * @param giftCertificateDto the {@code GiftCertificateDto} object
-     * @return list of the certificates
-     */
-    private List<GiftCertificateDto> findGiftCertificatesByNameAndDescription(GiftCertificateDto giftCertificateDto) {
-        return giftCertificateRepository
-                .findGiftCertificatesByNameAndDescription(giftCertificateDto.getName(), giftCertificateDto.getDescription())
-                .stream()
-                .map(giftCertificate ->
-                        giftCertificateDtoConverter.convertToDto(giftCertificate, tagRepository
-                                .findTagsByGiftCertificateId(giftCertificate.getId())
-                                .stream()
-                                .map(tag -> tagDtoConverter.convertToDto(tag))
-                                .collect(Collectors.toSet()))
-                )
-                .collect(Collectors.toList());
+                .map(tagDto -> tagDtoConverter.convertToEntity(tagDto))
+                .forEach(giftCertificate::addTag);
     }
 
     /**

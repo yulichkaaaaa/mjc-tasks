@@ -10,6 +10,7 @@ import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -47,6 +48,7 @@ public class TagServiceImpl implements TagService {
     /**
      * {@inheritDoc}
      */
+    @Transactional
     @Override
     public void createTag(TagDto tagDto) {
         String name = tagDto.getName();
@@ -61,13 +63,13 @@ public class TagServiceImpl implements TagService {
     /**
      * {@inheritDoc}
      */
+    @Transactional
     @Override
     public void deleteTag(long tagId) {
         Optional<Tag> tagOptional = tagRepository.findTagById(tagId);
         if(tagOptional.isEmpty()) {
             throw new EntityNotExistException(tagId);
         }
-        tagRepository.disconnectGiftCertificatesFromTag(tagId);
         tagRepository.deleteTag(tagId);
     }
 

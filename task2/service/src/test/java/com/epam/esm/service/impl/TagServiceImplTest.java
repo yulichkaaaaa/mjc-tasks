@@ -7,7 +7,7 @@ import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.impl.JdbcTagRepository;
+import com.epam.esm.repository.impl.JpaTagRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class TagServiceImplTest {
     @BeforeAll
     public void init() {
         tagService = new TagServiceImpl();
-        tagRepository = new JdbcTagRepository();
+        tagRepository = new JpaTagRepository();
         tagDtoConverter = new TagDtoConverter();
         MockitoAnnotations.openMocks(this);
         tagService.setTagRepository(tagRepository);

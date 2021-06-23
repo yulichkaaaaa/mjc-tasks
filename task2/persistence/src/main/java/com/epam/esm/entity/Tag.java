@@ -1,16 +1,29 @@
 package com.epam.esm.entity;
 
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Tag entity.
  *
  * @author Shuliko Yulia
  */
+@Entity
+@Table(name = "tag")
 public class Tag {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @ManyToMany(mappedBy = "tags")
+    private Set<GiftCertificate> giftCertificates;
 
     /**
      * Construct tag object.
@@ -27,6 +40,7 @@ public class Tag {
     public Tag(long id, String name) {
         this.id = id;
         this.name = name;
+        giftCertificates = new HashSet<>();
     }
 
     /**
@@ -54,6 +68,43 @@ public class Tag {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Getter method for gift certificates.
+     *
+     * @return set of gift certificates
+     */
+    public Set<GiftCertificate> getGiftCertificates() {
+        return giftCertificates;
+    }
+
+    /**
+     * Add gift certificates connected to the tag.
+     *
+     * @param giftCertificate the {@code GiftCertificate} object
+     */
+    public void addGiftCertificate(GiftCertificate giftCertificate) {
+        giftCertificates.add(giftCertificate);
+        giftCertificate.getTags().add(this);
+    }
+
+    /**
+     * Remove gift certificate and tag connection.
+     *
+     * @param giftCertificate the {@code GiftCertificate} object
+     */
+    public void removeGiftCertificate(GiftCertificate giftCertificate) {
+        giftCertificates.remove(giftCertificate);
+        giftCertificate.getTags().remove(this);
+    }
+
+    public void removeAllGiftCertificates() {
+        for (Iterator<GiftCertificate> iterator = giftCertificates.iterator(); iterator.hasNext();) {
+            GiftCertificate giftCertificate = iterator.next();
+            giftCertificate.getTags().remove(this);
+            iterator.remove();
+        }
     }
 
     @Override

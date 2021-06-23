@@ -1,23 +1,49 @@
 package com.epam.esm.entity;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Gift certificate entity.
  *
  * @author Shuleiko Yulia
  */
+@Entity
+@Table(name = "gift_certificate")
 public class GiftCertificate {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column
     private String name;
+
+    @Column
     private String description;
+
+    @Column
     private BigDecimal price;
+
+    @Column
     private Integer duration;
+
+    @Column(name = "create_date")
     private LocalDateTime createDate;
+
+    @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tag_m2m_gift_certificate",
+            joinColumns = @JoinColumn(name = "gift_certificate_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags;
 
     /**
      * Construct gift certificate object with given id, name, description,
@@ -42,6 +68,7 @@ public class GiftCertificate {
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
+        tags = new HashSet<>();
     }
 
     /**
@@ -64,6 +91,7 @@ public class GiftCertificate {
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
+        tags = new HashSet<>();
     }
 
     /**
@@ -196,6 +224,25 @@ public class GiftCertificate {
      */
     public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    /**
+     * Getter method of tags.
+     *
+     * @return set of tags
+     */
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
+        tag.getGiftCertificates().add(this);
+    }
+
+    public void removeTag (Tag tag) {
+        tags.remove(tag);
+        tag.getGiftCertificates().remove(this);
     }
 
     @Override

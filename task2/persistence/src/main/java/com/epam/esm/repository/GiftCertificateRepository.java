@@ -42,26 +42,21 @@ public interface GiftCertificateRepository {
     Optional<GiftCertificate> findGiftCertificateById(long giftCertificateId);
 
     /**
-     * Find gift certificates by it's tags names.
+     * Find gift certificates that matches list of criteria:
+     * name of the tag, name of the certificate and it's description.
+     * Sort obtained certificates if sort criteria was given.
      *
-     * @param tagName names of tags
-     */
-    List<GiftCertificate> findGiftCertificateByTagName(String tagName);
-
-    /**
-     * Find gift certificates by it's name and description.
-     * If only one of parameters passed, find by this parameter.
-     *
+     * @param tagName part of name of tag
      * @param name part of name of gift certificate
      * @param description part of description of gift certificate
+     * @param sortCriteria criteria of sorting (for example name, date)
+     * @param sortDirection direction of sorting (asc or desc)
      * @return list of gift certificates
      */
-    List<GiftCertificate> findGiftCertificatesByNameAndDescription(String name, String description);
+    List<GiftCertificate> findGiftCertificatesByCriteria(String tagName,
+                                                         String name,
+                                                         String description,
+                                                         List<String> sortCriteria,
+                                                         String sortDirection);
 
-    /**
-     * Find all gift certificates.
-     *
-     * @return list of gift certificates.
-     */
-    List<GiftCertificate> findAllGiftCertificates();
 }

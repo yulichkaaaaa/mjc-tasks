@@ -47,5 +47,7 @@ public interface GiftCertificateService {
      * @param giftCertificateDto the {@code GiftCertificateDto} object
      * @return list of certificates
      */
-    List<GiftCertificateDto> findGiftCertificatesByCriteria(GiftCertificateDto giftCertificateDto);
+    List<GiftCertificateDto> findGiftCertificatesByCriteria(GiftCertificateDto giftCertificateDto,
+                                                            List<String> sortCriteria,
+                                                            String sortDirection);
 }

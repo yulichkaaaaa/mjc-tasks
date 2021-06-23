@@ -10,8 +10,8 @@ import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.impl.JdbcGiftCertificateRepository;
-import com.epam.esm.repository.impl.JdbcTagRepository;
+import com.epam.esm.repository.impl.JpaGiftCertificateRepository;
+import com.epam.esm.repository.impl.JpaTagRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -62,8 +62,8 @@ public class GiftCertificateServiceTest {
     }
 
     private void setRepositories() {
-        giftCertificateRepository = new JdbcGiftCertificateRepository();
-        tagRepository = new JdbcTagRepository();
+        giftCertificateRepository = new JpaGiftCertificateRepository();
+        tagRepository = new JpaTagRepository();
         MockitoAnnotations.openMocks(this);
         giftCertificateService.setGiftCertificateRepository(giftCertificateRepository);
         giftCertificateService.setTagRepository(tagRepository);

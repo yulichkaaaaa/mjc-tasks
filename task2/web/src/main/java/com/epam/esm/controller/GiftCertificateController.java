@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -168,22 +167,17 @@ public class GiftCertificateController {
     public List<GiftCertificateDto> findCertificates(@RequestParam(required = false) String tagName,
                                                      @RequestParam(required = false) String giftCertificateName,
                                                      @RequestParam(required = false) String giftCertificateDescription,
-                                                     @RequestParam(required = false) String sortCriteria,
+                                                     @RequestParam(defaultValue = "") String sortCriteria,
                                                      @RequestParam(defaultValue = "asc") String sortDirection) {
         GiftCertificateDto giftCertificate = new GiftCertificateDto();
         giftCertificate.setName(giftCertificateName);
         giftCertificate.setDescription(giftCertificateDescription);
         giftCertificate.addTag(new TagDto(tagName));
-        List<GiftCertificateDto> giftCertificates = giftCertificateService
-                .findGiftCertificatesByCriteria(giftCertificate);
-        List<String> sortCriteriaList = new ArrayList<>();
-        if (sortCriteria != null) {
-            sortCriteriaList = Arrays
+        List<String> sortCriteriaList = Arrays
                     .stream(sortCriteria.split(","))
                     .collect(Collectors.toList());
-        }
-        return sortCriteria != null ? sortService
-                .sortGiftCertificates(giftCertificates, sortCriteriaList, sortDirection) : giftCertificates;
+        return giftCertificateService
+                .findGiftCertificatesByCriteria(giftCertificate, sortCriteriaList, sortDirection);
     }
 
     /**

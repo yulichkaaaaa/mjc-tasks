@@ -43,40 +43,9 @@ public interface TagRepository {
     Set<Tag> findTagsByGiftCertificateId(long giftCertificateId);
 
     /**
-     * Remove connection between tags and gift certificate.
-     *
-     * @param giftCertificateId id of the gift certificate
-     */
-    void disconnectTagsFromGiftCertificate(long giftCertificateId);
-
-    /**
      * Find tag by it's name.
      *
      * @param name name of the tag
      */
     Optional<Tag> findTagByName(String name);
-
-    /**
-     * Check if connection between tag and certificate exists.
-     *
-     * @param giftCertificateId id of the gift certificate
-     * @param tagId id of the tag
-     * @return {@code true} if connection exists
-     */
-    boolean connectionExists(long giftCertificateId, long tagId);
-
-    /**
-     * Create connection between tag and gift certificate.
-     *
-     * @param giftCertificateId id of the gift certificate
-     * @param tagId id of the tag
-     */
-    void connectTagsToGiftCertificate(long giftCertificateId, long tagId);
-
-    /**
-     * Remove connection between tag and gift certificates.
-     *
-     * @param tagId id of the tag
-     */
-    void disconnectGiftCertificatesFromTag(long tagId);
 }
