@@ -10,7 +10,6 @@ import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.exception.NotValidFieldsException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.LocaleService;
-import com.epam.esm.service.SortService;
 import com.epam.esm.validator.GiftCertificateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,7 +46,6 @@ public class GiftCertificateController {
     private GiftCertificateService giftCertificateService;
     private GiftCertificateValidator giftCertificateValidator;
     private LocaleService localeService;
-    private SortService sortService;
 
     /**
      * Setter method of the {@code LocaleService} object.
@@ -87,16 +85,6 @@ public class GiftCertificateController {
     @Autowired
     public void setGiftCertificateValidator(GiftCertificateValidator giftCertificateValidator) {
         this.giftCertificateValidator = giftCertificateValidator;
-    }
-
-    /**
-     * Setter method of the {@code SortService} object.
-     *
-     * @param sortService the {@code SortService} object
-     */
-    @Autowired
-    public void setSortService(SortService sortService) {
-        this.sortService = sortService;
     }
 
     /**
