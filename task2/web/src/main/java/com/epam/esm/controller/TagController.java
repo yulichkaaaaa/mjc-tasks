@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import javax.validation.Valid;
 
 /**
- * Rest controller that processes requests with the tag.
+ * Rest controller that processes requests with the tags.
  *
  * @author Shuleiko Yulia
  */
@@ -42,13 +42,11 @@ public class TagController {
     private TagValidator tagValidator;
     private LocaleService localeService;
 
-    /**
-     * Setter method of the {@code LocaleService} object.
-     *
-     * @param localeService the {@code LocaleService} object
-     */
-    @Autowired
-    public void setLocaleService(LocaleService localeService) {
+    public TagController(TagService tagService,
+                         TagValidator tagValidator,
+                         LocaleService localeService) {
+        this.tagService = tagService;
+        this.tagValidator = tagValidator;
         this.localeService = localeService;
     }
 
@@ -60,26 +58,6 @@ public class TagController {
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         binder.setValidator(tagValidator);
-    }
-
-    /**
-     * Setter method of the {@code TagService} object.
-     *
-     * @param tagService the {@code TagService} object
-     */
-    @Autowired
-    public void setTagService(TagService tagService) {
-        this.tagService = tagService;
-    }
-
-    /**
-     * Setter method of the {@code TagValidator} object.
-     *
-     * @param tagValidator the {@code TagValidator} object
-     */
-    @Autowired
-    public void setTagValidator(TagValidator tagValidator) {
-        this.tagValidator = tagValidator;
     }
 
     /**

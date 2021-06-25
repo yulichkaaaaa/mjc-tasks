@@ -1,6 +1,12 @@
 package com.epam.esm.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
@@ -99,8 +105,11 @@ public class Tag {
         giftCertificate.getTags().remove(this);
     }
 
+    /**
+     * Remove all connections between tag and gift certificates.
+     */
     public void removeAllGiftCertificates() {
-        for (Iterator<GiftCertificate> iterator = giftCertificates.iterator(); iterator.hasNext();) {
+        for (Iterator<GiftCertificate> iterator = giftCertificates.iterator(); iterator.hasNext(); ) {
             GiftCertificate giftCertificate = iterator.next();
             giftCertificate.getTags().remove(this);
             iterator.remove();

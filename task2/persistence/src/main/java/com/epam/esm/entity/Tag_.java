@@ -4,6 +4,11 @@ import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
+/**
+ * Static metamodel of tag entity.
+ *
+ * @author Yulia Shuleiko
+ */
 @StaticMetamodel(Tag.class)
 public class Tag_ {
 

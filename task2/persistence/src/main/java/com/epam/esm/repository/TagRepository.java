@@ -35,14 +35,6 @@ public interface TagRepository {
     Optional<Tag> findTagById(long tagId);
 
     /**
-     * Find tags of the gift certificate by it's id.
-     *
-     * @param giftCertificateId id of the gift certificate
-     * @return set of the {@code Tag} objects
-     */
-    Set<Tag> findTagsByGiftCertificateId(long giftCertificateId);
-
-    /**
      * Find tag by it's name.
      *
      * @param name name of the tag

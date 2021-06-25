@@ -6,6 +6,11 @@ import javax.persistence.metamodel.StaticMetamodel;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Static metamodel of gift certificate entity.
+ *
+ * @author Yulia Shuleiko
+ */
 @StaticMetamodel(GiftCertificate.class)
 public class GiftCertificate_ {
 
@@ -17,4 +22,5 @@ public class GiftCertificate_ {
     public static volatile SingularAttribute<GiftCertificate, LocalDateTime> createDate;
     public static volatile SingularAttribute<GiftCertificate, LocalDateTime> lastUpdateDate;
     public static volatile SetAttribute<GiftCertificate, Tag> tags;
+    public static volatile SetAttribute<GiftCertificate, Order> orders;
 }

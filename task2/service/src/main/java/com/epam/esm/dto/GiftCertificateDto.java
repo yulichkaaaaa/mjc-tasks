@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * Data transfer object fot the gift certificate.
+ * Data transfer object of the gift certificate.
  *
  * @author Shuleiko Yulia
  */
@@ -25,7 +25,7 @@ public class GiftCertificateDto {
 
     /**
      * Construct gift certificate object with given id, name, description,
-     * price, duration, createDate, lastUpdateDate, tags.
+     * price, duration, create date, last update date, tags.
      *
      * @param id             id of the gift certificate
      * @param name           name of the gift certificate
@@ -51,7 +51,7 @@ public class GiftCertificateDto {
 
     /**
      * Construct gift certificate object with given name, description,
-     * price, duration, createDate, lastUpdateDate, tags.
+     * price, duration, create date, last update date, tags.
      *
      * @param name           name of the gift certificate
      * @param description    description of the gift certificate

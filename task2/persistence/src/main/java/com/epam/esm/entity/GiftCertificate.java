@@ -1,6 +1,15 @@
 package com.epam.esm.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -37,6 +46,9 @@ public class GiftCertificate {
 
     @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
+
+    @OneToMany(mappedBy = "giftCertificate")
+    private Set<Order> orders;
 
     @ManyToMany
     @JoinTable(
@@ -235,12 +247,22 @@ public class GiftCertificate {
         return tags;
     }
 
+    /**
+     * Add tag to set.
+     *
+     * @param tag the {@code Tag} object
+     */
     public void addTag(Tag tag) {
         tags.add(tag);
         tag.getGiftCertificates().add(this);
     }
 
-    public void removeTag (Tag tag) {
+    /**
+     * Remove tag from set.
+     *
+     * @param tag the {@code Tag} object
+     */
+    public void removeTag(Tag tag) {
         tags.remove(tag);
         tag.getGiftCertificates().remove(this);
     }

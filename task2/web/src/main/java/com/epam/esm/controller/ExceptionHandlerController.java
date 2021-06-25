@@ -2,7 +2,6 @@ package com.epam.esm.controller;
 
 import com.epam.esm.error.CustomError;
 import com.epam.esm.service.LocaleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +22,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     private static final String NOT_SUPPORTED_METHOD_ERROR = "request_method_not_supported";
     private static final String GENERAL_ERROR = "general_error";
 
-    /**
-     * Setter method of the {@code LocaleService} object.
-     *
-     * @param localeService the {@code LocaleService} object
-     */
-    @Autowired
-    public void setLocaleService(LocaleService localeService) {
+    public ExceptionHandlerController(LocaleService localeService) {
         this.localeService = localeService;
     }
 

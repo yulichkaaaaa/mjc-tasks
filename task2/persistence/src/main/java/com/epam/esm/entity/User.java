@@ -1,7 +1,14 @@
 package com.epam.esm.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.OneToMany;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * User entity.
@@ -16,15 +23,26 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String passwordHash;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Order> orders;
+
+    /**
+     * Construct user object with given id, name, email and password hash.
+     *
+     * @param id           id of the user
+     * @param name         name of the user
+     * @param email        email of the user
+     * @param passwordHash hash of password
+     */
     public User(long id, String name, String email, String passwordHash) {
         this.id = id;
         this.name = name;
@@ -32,43 +50,93 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
+    /**
+     * Construct user object with given name, email and password hash.
+     *
+     * @param name         name of the user
+     * @param email        email of the user
+     * @param passwordHash hash of password
+     */
     public User(String name, String email, String passwordHash) {
         this.name = name;
         this.email = email;
         this.passwordHash = passwordHash;
     }
 
+    /**
+     * Construct user object.
+     */
     public User() {
     }
 
+    /**
+     * Getter method of the user's id.
+     *
+     * @return id of the user
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * Setter method of the user's id.
+     *
+     * @param id id of the user
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * Getter method of the name.
+     *
+     * @return name of the user
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Setter method of the name.
+     *
+     * @param name name of the user
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Getter method of the email.
+     *
+     * @return email of the user
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Setter method of the email.
+     *
+     * @param email email of the user
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * Getter method of the password hash.
+     *
+     * @return hash of password
+     */
     public String getPasswordHash() {
         return passwordHash;
     }
 
+    /**
+     * Setter method of the password hash.
+     *
+     * @param passwordHash hash of password
+     */
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }

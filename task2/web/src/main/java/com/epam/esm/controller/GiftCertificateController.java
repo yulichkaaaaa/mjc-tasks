@@ -47,13 +47,11 @@ public class GiftCertificateController {
     private GiftCertificateValidator giftCertificateValidator;
     private LocaleService localeService;
 
-    /**
-     * Setter method of the {@code LocaleService} object.
-     *
-     * @param localeService the {@code LocaleService} object
-     */
-    @Autowired
-    public void setLocaleService(LocaleService localeService) {
+    public GiftCertificateController(GiftCertificateService giftCertificateService,
+                                     GiftCertificateValidator giftCertificateValidator,
+                                     LocaleService localeService) {
+        this.giftCertificateService = giftCertificateService;
+        this.giftCertificateValidator = giftCertificateValidator;
         this.localeService = localeService;
     }
 
@@ -65,26 +63,6 @@ public class GiftCertificateController {
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         binder.setValidator(giftCertificateValidator);
-    }
-
-    /**
-     * Setter method of the {@code GiftCertificateService} object.
-     *
-     * @param giftCertificateService the {@code GiftCertificateService} object
-     */
-    @Autowired
-    public void setGiftCertificateService(GiftCertificateService giftCertificateService) {
-        this.giftCertificateService = giftCertificateService;
-    }
-
-    /**
-     * Setter method of the {@code GiftCertificateValidator} object.
-     *
-     * @param giftCertificateValidator the {@code GiftCertificateValidator} object
-     */
-    @Autowired
-    public void setGiftCertificateValidator(GiftCertificateValidator giftCertificateValidator) {
-        this.giftCertificateValidator = giftCertificateValidator;
     }
 
     /**

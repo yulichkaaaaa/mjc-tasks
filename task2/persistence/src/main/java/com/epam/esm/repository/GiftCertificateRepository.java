@@ -46,10 +46,10 @@ public interface GiftCertificateRepository {
      * name of the tag, name of the certificate and it's description.
      * Sort obtained certificates if sort criteria was given.
      *
-     * @param tagName part of name of tag
-     * @param name part of name of gift certificate
-     * @param description part of description of gift certificate
-     * @param sortCriteria criteria of sorting (for example name, date)
+     * @param tagName       part of name of tag
+     * @param name          part of name of gift certificate
+     * @param description   part of description of gift certificate
+     * @param sortCriteria  criteria of sorting (for example name, date)
      * @param sortDirection direction of sorting (asc or desc)
      * @return list of gift certificates
      */

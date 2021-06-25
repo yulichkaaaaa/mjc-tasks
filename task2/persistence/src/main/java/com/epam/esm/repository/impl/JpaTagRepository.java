@@ -11,7 +11,8 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.*;
+import java.util.Optional;
+import java.util.List;
 
 /**
  * Implementation of the {@code TagRepository} that uses JPA.
@@ -58,17 +59,6 @@ public class JpaTagRepository implements TagRepository {
     public Optional<Tag> findTagById(long tagId) {
         Tag tag = entityManager.find(Tag.class, tagId);
         return Optional.ofNullable(tag);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Set<Tag> findTagsByGiftCertificateId(long giftCertificateId) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Tag> criteriaQuery = criteriaBuilder.createQuery(Tag.class);
-        //
-        return new HashSet<>();
     }
 
     /**
