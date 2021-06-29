@@ -1,14 +1,11 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.GiftCertificateDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-/**
- * Interface provides operations with {@code GiftCertificateDto} object.
- *
- * @author Shuleiko Yulia
- */
 public interface GiftCertificateService {
 
     /**
@@ -47,7 +44,8 @@ public interface GiftCertificateService {
      * @param giftCertificateDto the {@code GiftCertificateDto} object
      * @return list of certificates
      */
-    List<GiftCertificateDto> findGiftCertificatesByCriteria(GiftCertificateDto giftCertificateDto,
+    Page<GiftCertificateDto> findGiftCertificatesByCriteria(GiftCertificateDto giftCertificateDto,
                                                             List<String> sortCriteria,
-                                                            String sortDirection);
+                                                            String sortDirection,
+                                                            Pageable pageable);
 }

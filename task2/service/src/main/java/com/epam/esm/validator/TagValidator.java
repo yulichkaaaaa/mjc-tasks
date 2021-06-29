@@ -35,8 +35,8 @@ public class TagValidator implements Validator {
         validateName(tag.getName(), errors);
     }
 
-    private void validateName(String name, Errors errors){
-        if(name.isEmpty()) {
+    private void validateName(String name, Errors errors) {
+        if (name.isEmpty()) {
             errors.rejectValue(FIELD_NAME, EMPTY_NAME_ERROR);
         } else if (name.length() > NAME_MAX_LENGTH) {
             errors.rejectValue(FIELD_NAME, TOO_LONG_NAME_ERROR);

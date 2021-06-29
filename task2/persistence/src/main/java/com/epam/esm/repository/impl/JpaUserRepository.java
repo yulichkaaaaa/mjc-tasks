@@ -1,18 +1,20 @@
 package com.epam.esm.repository.impl;
 
-import com.epam.esm.entity.Tag;
-import com.epam.esm.entity.Order;
-import com.epam.esm.entity.Tag_;
-import com.epam.esm.entity.User_;
 import com.epam.esm.entity.User;
-import com.epam.esm.entity.GiftCertificate_;
+import com.epam.esm.entity.Order;
+import com.epam.esm.entity.User_;
 import com.epam.esm.entity.Order_;
+import com.epam.esm.entity.Tag;
+import com.epam.esm.entity.Tag_;
+import com.epam.esm.entity.GiftCertificate_;
+import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.repository.UserRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Root;
@@ -54,22 +56,23 @@ public class JpaUserRepository implements UserRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers(int pageNumber, int pageSize) {
         Query query = entityManager.createQuery(JPQL_SELECT_ALL_USERS);
-        return (List<User>) query.getResultList();
+        return (List<User>) query.setMaxResults(pageSize).setFirstResult(pageNumber * pageSize).getResultList();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Order> findAllUserOrders(long userId) {
+    public List<Order> findAllUserOrders(long userId, int pageNumber, int pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
         Root<Order> order = criteriaQuery.from(Order.class);
         Join<Order, User> user = order.join(Order_.user);
         criteriaQuery.select(order).where(criteriaBuilder.equal(user.get(User_.id), userId));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        TypedQuery<Order> typedQuery = entityManager.createQuery(criteriaQuery);
+        return typedQuery.setFirstResult(pageNumber * pageSize).setMaxResults(pageSize).getResultList();
     }
 
     /**
@@ -80,16 +83,17 @@ public class JpaUserRepository implements UserRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tag> criteriaQuery = criteriaBuilder.createQuery(Tag.class);
         Root<Tag> tag = criteriaQuery.from(Tag.class);
-        Join<Order, User> user = tag
+        Join<GiftCertificate, Order> order = tag
                 .join(Tag_.giftCertificates)
-                .join(GiftCertificate_.orders)
-                .join(Order_.user);
+                .join(GiftCertificate_.orders);
+        Join<Order, User> user = order.join(Order_.user);
         criteriaQuery
                 .select(tag)
                 .where(criteriaBuilder.equal(user.get(User_.id), userId))
                 .groupBy(tag.get(Tag_.name))
-                .orderBy(criteriaBuilder.desc(criteriaBuilder.count(tag)));
-        List<Tag> tags = entityManager.createQuery(criteriaQuery).getResultList();
+                .orderBy(criteriaBuilder.desc(criteriaBuilder.sum(order.get(Order_.cost))));
+        TypedQuery<Tag> typedQuery = entityManager.createQuery(criteriaQuery);
+        List<Tag> tags = typedQuery.setMaxResults(1).getResultList();
         return tags.isEmpty() ? Optional.empty() : Optional.of(tags.get(0));
     }
 }

@@ -14,6 +14,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-core:${jacksonCoreVersion}"
     implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonAnnotationsVersion}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonDatatypeVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: '2.5.2'
 }
 
 test {

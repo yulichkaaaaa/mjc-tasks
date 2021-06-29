@@ -1,25 +1,16 @@
-package com.epam.esm.dto;
+package com.epam.esm.model;
 
-import java.util.Objects;
+import org.springframework.hateoas.RepresentationModel;
 
 /**
- * Data transfer object of the tag.
+ * Representational model of tag.
  *
- * @author Shuleiko Yulia.
+ * @author Shuleiko Yulia
  */
-public class TagDto {
+public class TagModel extends RepresentationModel<TagModel> {
 
     private long id;
     private String name;
-
-    /**
-     * Construct object with given name.
-     *
-     * @param name name of the tag
-     */
-    public TagDto(String name) {
-        this.name = name;
-    }
 
     /**
      * Construct object with given id and name.
@@ -27,7 +18,7 @@ public class TagDto {
      * @param id   id of the tag
      * @param name name of the tag
      */
-    public TagDto(long id, String name) {
+    public TagModel(long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -35,7 +26,7 @@ public class TagDto {
     /**
      * Construct tag object.
      */
-    public TagDto() {
+    public TagModel() {
     }
 
     /**
@@ -72,18 +63,5 @@ public class TagDto {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TagDto tagDto = (TagDto) o;
-        return id == tagDto.id && Objects.equals(name, tagDto.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
     }
 }

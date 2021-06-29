@@ -10,9 +10,13 @@ import com.epam.esm.dto.converters.TagDtoConverter;
 import com.epam.esm.dto.converters.UserDtoConverter;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.User;
+import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,23 +68,21 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<UserDto> findAllUsers() {
-        return userRepository.getAllUsers()
+    public Page<UserDto> findAllUsers(Pageable pageable) {
+        List<UserDto> users = userRepository.getAllUsers(pageable.getPageNumber(), pageable.getPageSize())
                 .stream()
                 .map(user -> userDtoConverter.convertToDto(user))
                 .collect(Collectors.toList());
+        return new PageImpl<>(users, pageable, users.size());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<OrderDto> findAllUserOrders(long userId) {
-        Optional<User> userOptional = userRepository.findUserById(userId);
-        if (userOptional.isEmpty()) {
-            throw new EntityNotFoundException(userId);
-        }
-        return userRepository.findAllUserOrders(userId)
+    public Page<OrderDto> findAllUserOrders(long userId, Pageable pageable) {
+        checkUserExists(userId);
+        List<OrderDto> orders = userRepository.findAllUserOrders(userId, pageable.getPageNumber(), pageable.getPageSize())
                 .stream()
                 .map(order -> {
                     UserDto userDto = userDtoConverter.convertToDto(order.getUser());
@@ -92,6 +94,7 @@ public class UserServiceImpl implements UserService {
                                             .collect(Collectors.toSet()));
                     return orderDtoConverter.convertToDto(order, userDto, giftCertificateDto);
                 }).collect(Collectors.toList());
+        return new PageImpl<>(orders, pageable, orders.size());
     }
 
     /**
@@ -99,11 +102,20 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public TagDto findUserMostPopularTag(long userId) {
-        Optional<User> userOptional = userRepository.findUserById(userId);
-        if (userOptional.isEmpty()) {
-            throw new EntityNotFoundException(userId);
-        }
+        checkUserExists(userId);
         Optional<Tag> tagOptional = userRepository.findUserMostPopularTag(userId);
         return tagOptional.map(tag -> tagDtoConverter.convertToDto(tag)).orElse(null);
+    }
+
+    /**
+     * Check if user with given id exists.
+     *
+     * @param userId id of the user
+     */
+    private void checkUserExists(long userId) {
+        Optional<User> userOptional = userRepository.findUserById(userId);
+        if (userOptional.isEmpty()) {
+            throw new EntityNotExistException(userId);
+        }
     }
 }

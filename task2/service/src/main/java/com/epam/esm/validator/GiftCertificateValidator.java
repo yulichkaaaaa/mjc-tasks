@@ -34,7 +34,6 @@ public class GiftCertificateValidator implements Validator {
     private static final String FUTURE_CREATE_DATE_ERROR = "create_date_in_future";
     private static final String EMPTY_TAG_NAME_ERROR = "tag_name_empty";
     private static final String TOO_LONG_TAG_NAME_ERROR = "tag_name_too_long";
-    private static final String PRICE_ABSENT = "price_absent";
 
     /**
      * {@inheritDoc}
@@ -50,62 +49,62 @@ public class GiftCertificateValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         GiftCertificateDto giftCertificate = (GiftCertificateDto) target;
-        if(Objects.nonNull(giftCertificate.getName())) {
+        if (Objects.nonNull(giftCertificate.getName())) {
             validateName(giftCertificate.getName(), errors);
         }
-        if(Objects.nonNull(giftCertificate.getDescription())) {
+        if (Objects.nonNull(giftCertificate.getDescription())) {
             validateDescription(giftCertificate.getDescription(), errors);
         }
-        if(Objects.nonNull(giftCertificate.getPrice())) {
+        if (Objects.nonNull(giftCertificate.getPrice())) {
             validatePrice(giftCertificate.getPrice(), errors);
         }
-        if(Objects.nonNull(giftCertificate.getDuration())) {
+        if (Objects.nonNull(giftCertificate.getDuration())) {
             validateDuration(giftCertificate.getDuration(), errors);
         }
         if (Objects.nonNull(giftCertificate.getCreateDate())) {
             validateCreateDate(giftCertificate.getCreateDate(), errors);
         }
-        if(Objects.nonNull(giftCertificate.getTags())) {
+        if (Objects.nonNull(giftCertificate.getTags())) {
             giftCertificate.getTags().forEach(tag -> validateTagName(tag.getName(), errors));
         }
     }
 
-    private void validateName(String name, Errors errors){
-        if(name.isEmpty()) {
+    private void validateName(String name, Errors errors) {
+        if (name.isEmpty()) {
             errors.rejectValue(FIELD_NAME, EMPTY_NAME_ERROR);
         } else if (name.length() > NAME_MAX_LENGTH) {
             errors.rejectValue(FIELD_NAME, TOO_LONG_NAME_ERROR);
         }
     }
 
-    private void validateDescription(String description, Errors errors){
-        if(description.isEmpty()) {
+    private void validateDescription(String description, Errors errors) {
+        if (description.isEmpty()) {
             errors.rejectValue(FIELD_DESCRIPTION, EMPTY_DESCRIPTION_ERROR);
         } else if (description.length() > DESCRIPTION_MAX_LENGTH) {
             errors.rejectValue(FIELD_DESCRIPTION, TOO_LONG_DESCRIPTION_ERROR);
         }
     }
 
-    private void validatePrice(BigDecimal price, Errors errors){
+    private void validatePrice(BigDecimal price, Errors errors) {
         if (price.doubleValue() <= 0.0) {
             errors.rejectValue(FIELD_PRICE, NOT_POSITIVE_PRICE_ERROR);
         }
     }
 
-    private void validateDuration(int duration, Errors errors){
-        if(duration <= 0) {
+    private void validateDuration(int duration, Errors errors) {
+        if (duration <= 0) {
             errors.rejectValue(FIELD_DURATION, NOT_POSITIVE_DURATION_ERROR);
         }
     }
 
-    private void validateCreateDate(LocalDateTime createDate, Errors errors){
-        if(createDate.isAfter(LocalDateTime.now())) {
+    private void validateCreateDate(LocalDateTime createDate, Errors errors) {
+        if (createDate.isAfter(LocalDateTime.now())) {
             errors.rejectValue(FIELD_CREATE_DATE, FUTURE_CREATE_DATE_ERROR);
         }
     }
 
-    private void validateTagName(String name, Errors errors){
-        if(name.isEmpty()) {
+    private void validateTagName(String name, Errors errors) {
+        if (name.isEmpty()) {
             errors.rejectValue(FIELD_TAGS, EMPTY_TAG_NAME_ERROR);
         } else if (name.length() > NAME_MAX_LENGTH) {
             errors.rejectValue(FIELD_TAGS, TOO_LONG_TAG_NAME_ERROR);

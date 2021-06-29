@@ -12,7 +12,8 @@ public class CustomError {
 
     /**
      * Constructs error with given code and message.
-     * @param code error's code
+     *
+     * @param code    error's code
      * @param message error's message
      */
     public CustomError(int code, String message) {

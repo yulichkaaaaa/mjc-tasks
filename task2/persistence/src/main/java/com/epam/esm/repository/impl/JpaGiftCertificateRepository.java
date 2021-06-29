@@ -18,9 +18,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Order;
 import java.util.List;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Implementation of the {@code GiftCertificateRepository} that uses JPA.
@@ -67,7 +67,6 @@ public class JpaGiftCertificateRepository implements GiftCertificateRepository {
     @Override
     public void deleteGiftCertificate(long giftCertificateId) {
         GiftCertificate giftCertificate = entityManager.find(GiftCertificate.class, giftCertificateId);
-        //remove all tags
         entityManager.remove(giftCertificate);
     }
 
@@ -84,42 +83,48 @@ public class JpaGiftCertificateRepository implements GiftCertificateRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<GiftCertificate> findGiftCertificatesByCriteria(String tagName, String name,
-                                                                String description, List<String> sortParams,
-                                                                String sortDirection) {
+    public List<GiftCertificate> findGiftCertificatesByCriteria(List<String> tagNames, String name, String description,
+                                                                List<String> sortParams, String sortDirection,
+                                                                int pageNumber, int pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
         Root<GiftCertificate> giftCertificate = criteriaQuery.from(GiftCertificate.class);
         SetJoin<GiftCertificate, Tag> tag = giftCertificate.join(GiftCertificate_.tags);
-        Predicate searchCriteria
-                = defineSearchCriteria(criteriaBuilder, giftCertificate, tag, tagName, name, description);
+        Predicate[] searchCriteria
+                = defineSearchCriteria(criteriaBuilder, giftCertificate, tag, tagNames, name, description);
         List<Order> sortOrder = defineSortOrder(criteriaBuilder, giftCertificate, sortParams, sortDirection);
         criteriaQuery
                 .select(giftCertificate)
                 .where(searchCriteria)
+                .groupBy(giftCertificate.get(GiftCertificate_.id))
+                .having(criteriaBuilder.count(giftCertificate).in(tagNames.size()))
                 .orderBy(sortOrder);
         TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(criteriaQuery);
-        return typedQuery.getResultList();
+        return typedQuery.setMaxResults(pageSize).setFirstResult(pageNumber * pageSize).getResultList();
     }
 
     /**
      * Define general criteria of search.
      *
-     * @param tagName     name of the tag
      * @param name        name of the gift certificate
      * @param description description of the gift certificate
      * @return the {@code Predicate} object
      */
-    private Predicate defineSearchCriteria(CriteriaBuilder criteriaBuilder,
-                                           Root<GiftCertificate> giftCertificate,
-                                           SetJoin<GiftCertificate, Tag> tag, String tagName,
-                                           String name, String description) {
-        tagName = Objects.isNull(tagName) ? "" : tagName;
-        name = Objects.isNull(name) ? "" : name;
-        description = Objects.isNull(description) ? "" : description;
-        return criteriaBuilder.and(criteriaBuilder.like(tag.get(Tag_.name), "%" + tagName + "%"),
-                criteriaBuilder.like(giftCertificate.get(GiftCertificate_.name), "%" + name + "%"),
-                criteriaBuilder.like(giftCertificate.get(GiftCertificate_.description), "%" + description + "%"));
+    private Predicate[] defineSearchCriteria(CriteriaBuilder criteriaBuilder,
+                                             Root<GiftCertificate> giftCertificate,
+                                             SetJoin<GiftCertificate, Tag> tag, List<String> tagNames,
+                                             String name, String description) {
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(tag.get(Tag_.name).in(tagNames));
+        if (Objects.nonNull(name)) {
+            predicates.add(criteriaBuilder
+                    .like(giftCertificate.get(GiftCertificate_.name), "%" + name + "%"));
+        }
+        if (Objects.nonNull(description)) {
+            predicates.add(criteriaBuilder
+                    .like(giftCertificate.get(GiftCertificate_.description), "%" + description + "%"));
+        }
+        return predicates.toArray(new Predicate[]{});
     }
 
     /**

@@ -13,6 +13,8 @@ subprojects { project ->
         implementation "org.springframework.boot:spring-boot-starter-web:${springWebVersion}"
         implementation "org.springframework.boot:spring-boot-starter-tomcat:${springTomcatVersion}"
         implementation "org.springframework.boot:spring-boot-starter-jdbc:${springJdbcVersion}"
+        implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springJpaVersion}"
+
     }
 
     test {

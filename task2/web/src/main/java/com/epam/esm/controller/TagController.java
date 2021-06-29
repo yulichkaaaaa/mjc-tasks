@@ -7,10 +7,11 @@ import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.exception.NotValidFieldsException;
+import com.epam.esm.model.TagModel;
+import com.epam.esm.model.assembler.TagModelAssembler;
 import com.epam.esm.service.LocaleService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.TagValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -21,8 +22,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 import javax.validation.Valid;
 
@@ -32,7 +36,7 @@ import javax.validation.Valid;
  * @author Shuleiko Yulia
  */
 @RestController
-@RequestMapping("tags")
+@RequestMapping("/tags")
 public class TagController {
 
     private static final String ENTITY_NOT_FOUND_ERROR = "entity_not_found";
@@ -41,13 +45,19 @@ public class TagController {
     private TagService tagService;
     private TagValidator tagValidator;
     private LocaleService localeService;
+    private TagModelAssembler tagModelAssembler;
 
+    /**
+     * Construct controller with all necessary dependencies.
+     */
     public TagController(TagService tagService,
                          TagValidator tagValidator,
-                         LocaleService localeService) {
+                         LocaleService localeService,
+                         TagModelAssembler tagModelAssembler) {
         this.tagService = tagService;
         this.tagValidator = tagValidator;
         this.localeService = localeService;
+        this.tagModelAssembler = tagModelAssembler;
     }
 
     /**
@@ -66,7 +76,7 @@ public class TagController {
      * @param id id of the tag
      */
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping
     public void deleteTag(@PathVariable long id) {
         tagService.deleteTag(id);
     }
@@ -77,9 +87,9 @@ public class TagController {
      * @param id id of the tag
      * @return the {@code TagDto} object
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public TagDto findTagById(@PathVariable long id) {
-        return tagService.findTagById(id);
+    @GetMapping(value = "/{id}")
+    public TagModel findTagById(@PathVariable long id) {
+        return tagModelAssembler.toModel(tagService.findTagById(id));
     }
 
     /**
@@ -89,7 +99,7 @@ public class TagController {
      * @param bindingResult the {@code BindingResult} object
      */
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public void createTag(@RequestBody @Valid TagDto tagDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new NotValidFieldsException(bindingResult);
@@ -101,7 +111,7 @@ public class TagController {
      * Handle the {@code EntityNotExistException}.
      *
      * @param ex the {@code EntityNotExistException} object
-     * @return the {@code Error} object
+     * @return the {@code CustomError} object
      */
     @ExceptionHandler(EntityNotExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -114,7 +124,7 @@ public class TagController {
      * Handle the {@code EntityNotFoundException}.
      *
      * @param ex the {@code EntityNotFoundException} object
-     * @return the {@code Error} object
+     * @return the {@code CustomError} object
      */
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -127,7 +137,7 @@ public class TagController {
      * Handle the {@code EntityAlreadyExistsException}.
      *
      * @param ex the {@code EntityAlreadyExistsException} object
-     * @return the {@code Error} object
+     * @return the {@code CustomError} object
      */
     @ExceptionHandler(EntityAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -140,7 +150,7 @@ public class TagController {
      * Handle the {@code NotValidFieldsException}.
      *
      * @param ex the {@code NotValidFieldsException} object
-     * @return the {@code Error} object
+     * @return the {@code CustomError} object
      */
     @ExceptionHandler(NotValidFieldsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

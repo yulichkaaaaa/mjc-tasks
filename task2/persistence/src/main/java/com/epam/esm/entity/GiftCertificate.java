@@ -6,10 +6,12 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -265,6 +267,22 @@ public class GiftCertificate {
     public void removeTag(Tag tag) {
         tags.remove(tag);
         tag.getGiftCertificates().remove(this);
+    }
+
+    /**
+     * Auditing persist.
+     */
+    @PrePersist
+    public void onPrePersist() {
+        createDate = LocalDateTime.now();
+    }
+
+    /**
+     * Auditing update.
+     */
+    @PreUpdate
+    public void onPreUpdate() {
+        lastUpdateDate = LocalDateTime.now();
     }
 
     @Override

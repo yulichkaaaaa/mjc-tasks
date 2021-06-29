@@ -46,17 +46,17 @@ public interface GiftCertificateRepository {
      * name of the tag, name of the certificate and it's description.
      * Sort obtained certificates if sort criteria was given.
      *
-     * @param tagName       part of name of tag
+     * @param tagNames      part of names of tags
      * @param name          part of name of gift certificate
      * @param description   part of description of gift certificate
      * @param sortCriteria  criteria of sorting (for example name, date)
      * @param sortDirection direction of sorting (asc or desc)
+     * @param pageNumber    number of the page
+     * @param pageSize      size of the page
      * @return list of gift certificates
      */
-    List<GiftCertificate> findGiftCertificatesByCriteria(String tagName,
-                                                         String name,
-                                                         String description,
-                                                         List<String> sortCriteria,
-                                                         String sortDirection);
+    List<GiftCertificate> findGiftCertificatesByCriteria(List<String> tagNames, String name, String description,
+                                                         List<String> sortCriteria, String sortDirection,
+                                                         int pageNumber, int pageSize);
 
 }

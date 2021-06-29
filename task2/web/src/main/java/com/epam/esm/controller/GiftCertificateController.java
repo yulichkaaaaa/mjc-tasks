@@ -8,10 +8,17 @@ import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.exception.NotValidFieldsException;
+import com.epam.esm.exception.pagination.NoSuchPageException;
+import com.epam.esm.model.GiftCertificateModel;
+import com.epam.esm.model.assembler.GiftCertificateModelAssembler;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.LocaleService;
 import com.epam.esm.validator.GiftCertificateValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -29,6 +36,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +45,7 @@ import java.util.stream.Collectors;
  * @author Shuleiko Yulia
  */
 @RestController
-@RequestMapping("gift-certificates")
+@RequestMapping("/gift-certificates")
 public class GiftCertificateController {
 
     private static final String ENTITY_NOT_FOUND_ERROR = "entity_not_found";
@@ -46,13 +54,22 @@ public class GiftCertificateController {
     private GiftCertificateService giftCertificateService;
     private GiftCertificateValidator giftCertificateValidator;
     private LocaleService localeService;
+    private GiftCertificateModelAssembler giftCertificateModelAssembler;
+    private PagedResourcesAssembler<GiftCertificateDto> pagedGiftCertificateResourcesAssembler;
 
+    /**
+     * Construct controller with all necessary dependencies.
+     */
     public GiftCertificateController(GiftCertificateService giftCertificateService,
                                      GiftCertificateValidator giftCertificateValidator,
-                                     LocaleService localeService) {
+                                     LocaleService localeService,
+                                     GiftCertificateModelAssembler giftCertificateModelAssembler,
+                                     PagedResourcesAssembler<GiftCertificateDto> pagedGiftCertificateResourcesAssembler) {
         this.giftCertificateService = giftCertificateService;
         this.giftCertificateValidator = giftCertificateValidator;
         this.localeService = localeService;
+        this.giftCertificateModelAssembler = giftCertificateModelAssembler;
+        this.pagedGiftCertificateResourcesAssembler = pagedGiftCertificateResourcesAssembler;
     }
 
     /**
@@ -72,8 +89,8 @@ public class GiftCertificateController {
      * @return the {@code GiftCertificateDto} object
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public GiftCertificateDto findGiftCertificateById(@PathVariable long id) {
-        return giftCertificateService.findGiftCertificateById(id);
+    public GiftCertificateModel findGiftCertificateById(@PathVariable long id) {
+        return giftCertificateModelAssembler.toModel(giftCertificateService.findGiftCertificateById(id));
     }
 
     /**
@@ -124,33 +141,59 @@ public class GiftCertificateController {
     /**
      * Find certificates by criteria.
      *
-     * @param tagName                    name of tag
+     * @param tagNames                   names of tag
      * @param giftCertificateName        part of the name of the certificate
      * @param giftCertificateDescription part of the description of the certificate
      * @return list of the certificates
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<GiftCertificateDto> findCertificates(@RequestParam(required = false) String tagName,
-                                                     @RequestParam(required = false) String giftCertificateName,
-                                                     @RequestParam(required = false) String giftCertificateDescription,
-                                                     @RequestParam(defaultValue = "") String sortCriteria,
-                                                     @RequestParam(defaultValue = "asc") String sortDirection) {
+    public PagedModel<GiftCertificateModel> findCertificates(@RequestParam(required = false) String tagNames,
+                                                             @RequestParam(required = false) String giftCertificateName,
+                                                             @RequestParam(required = false) String giftCertificateDescription,
+                                                             @RequestParam(defaultValue = "") String sortCriteria,
+                                                             @RequestParam(defaultValue = "asc") String sortDirection,
+                                                             @RequestParam int page,
+                                                             @RequestParam int size) {
+        GiftCertificateDto giftCertificate = defineSearchCriteria(giftCertificateName, giftCertificateDescription, tagNames);
+        List<String> sortCriteriaList = Arrays
+                .stream(sortCriteria.split(","))
+                .collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<GiftCertificateDto> giftCertificatesPage = giftCertificateService
+                .findGiftCertificatesByCriteria(giftCertificate, sortCriteriaList, sortDirection, pageable);
+        if (giftCertificatesPage.getNumber() >= giftCertificatesPage.getTotalPages()) {
+            throw new NoSuchPageException(giftCertificatesPage.getNumber());
+        }
+        return pagedGiftCertificateResourcesAssembler.toModel(giftCertificatesPage, giftCertificateModelAssembler);
+    }
+
+    /**
+     * Define criteria of the search.
+     *
+     * @param giftCertificateName        name of the gift certificate
+     * @param giftCertificateDescription description of the gift certificate
+     * @param tagNames                   names of tags
+     * @return the {@code GiftCertificateDto} that represents search criteria
+     */
+    private GiftCertificateDto defineSearchCriteria(String giftCertificateName,
+                                                    String giftCertificateDescription,
+                                                    String tagNames) {
         GiftCertificateDto giftCertificate = new GiftCertificateDto();
         giftCertificate.setName(giftCertificateName);
         giftCertificate.setDescription(giftCertificateDescription);
-        giftCertificate.addTag(new TagDto(tagName));
-        List<String> sortCriteriaList = Arrays
-                    .stream(sortCriteria.split(","))
-                    .collect(Collectors.toList());
-        return giftCertificateService
-                .findGiftCertificatesByCriteria(giftCertificate, sortCriteriaList, sortDirection);
+        if (Objects.nonNull(tagNames)) {
+            Arrays.stream(tagNames.split(","))
+                    .map(TagDto::new)
+                    .forEach(giftCertificate::addTag);
+        }
+        return giftCertificate;
     }
 
     /**
      * Handle the {@code EntityNotExistException}.
      *
      * @param ex the {@code EntityNotExistException} object
-     * @return the {@code Error} object
+     * @return the {@code CustomError} object
      */
     @ExceptionHandler(EntityNotExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -163,7 +206,7 @@ public class GiftCertificateController {
      * Handle the {@code EntityNotFoundException}.
      *
      * @param ex the {@code EntityNotFoundException} object
-     * @return the {@code Error} object
+     * @return the {@code CustomError} object
      */
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -176,7 +219,7 @@ public class GiftCertificateController {
      * Handle the {@code EntityAlreadyExistsException}.
      *
      * @param ex the {@code EntityAlreadyExistsException} object
-     * @return the {@code Error} object
+     * @return the {@code CustomError} object
      */
     @ExceptionHandler(EntityAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -189,7 +232,7 @@ public class GiftCertificateController {
      * Handle the {@code NotValidFieldsException}.
      *
      * @param ex the {@code NotValidFieldsException} object
-     * @return the {@code Error} object
+     * @return the {@code CustomError} object
      */
     @ExceptionHandler(NotValidFieldsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

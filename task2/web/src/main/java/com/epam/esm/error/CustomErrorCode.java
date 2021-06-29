@@ -17,7 +17,8 @@ public enum CustomErrorCode {
     GIFT_CERTIFICATE_ALREADY_EXISTS(40002),
     GIFT_CERTIFICATE_NOT_EXIST(40002),
     GIFT_CERTIFICATE_FIELDS_NOT_VALID(40002),
-    USER_NOT_FOUND(40403);
+    USER_NOT_FOUND(40403),
+    USER_NOT_EXIST(40403);
 
     public final int code;
 
@@ -26,7 +27,7 @@ public enum CustomErrorCode {
      *
      * @param code custom code of the error
      */
-    CustomErrorCode(int code){
+    CustomErrorCode(int code) {
         this.code = code;
     }
 }

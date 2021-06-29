@@ -25,17 +25,21 @@ public interface UserRepository {
     /**
      * Find all users.
      *
+     * @param pageNumber number of the page
+     * @param pageSize size of the page
      * @return list of users
      */
-    List<User> getAllUsers();
+    List<User> getAllUsers(int pageNumber, int pageSize);
 
     /**
      * Find all orders of the user with given id.
      *
+     * @param pageNumber number of the page
+     * @param pageSize size of the page
      * @param userId id of the user
      * @return list of orders
      */
-    List<Order> findAllUserOrders(long userId);
+    List<Order> findAllUserOrders(long userId, int pageNumber, int pageSize);
 
     /**
      * Find the most popular tag of the user by user's ordered gift certificates.

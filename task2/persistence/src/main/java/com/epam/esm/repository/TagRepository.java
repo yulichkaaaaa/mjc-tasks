@@ -3,7 +3,6 @@ package com.epam.esm.repository;
 import com.epam.esm.entity.Tag;
 
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Interface provides operations with the storage of {@code Tag} entity.

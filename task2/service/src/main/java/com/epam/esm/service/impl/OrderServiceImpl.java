@@ -11,7 +11,6 @@ import com.epam.esm.service.OrderService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -45,12 +44,7 @@ public class OrderServiceImpl implements OrderService {
     public void makeOrder(long userId, long giftCertificateId) {
         GiftCertificate giftCertificate = findGiftCertificateById(giftCertificateId);
         User user = findUserById(userId);
-        Order order = new Order(
-                giftCertificate.getPrice(),
-                LocalDateTime.now(),
-                user,
-                giftCertificate
-        );
+        Order order = new Order(user, giftCertificate);
         orderRepository.createOrder(order);
     }
 

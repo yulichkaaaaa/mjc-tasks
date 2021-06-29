@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.PrePersist;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -59,18 +60,12 @@ public class Order {
     }
 
     /**
-     * Construct order object with given cost, purchase timestamp,
-     * user and gift certificate.
+     * Construct order object with given user and gift certificate.
      *
-     * @param cost              cost of the certificate on the moment of purchase
-     * @param purchaseTimestamp date and time of order registration
      * @param user              user that made an order
      * @param giftCertificate   certificate that was ordered
      */
-    public Order(BigDecimal cost, LocalDateTime purchaseTimestamp, User user,
-                 GiftCertificate giftCertificate) {
-        this.cost = cost;
-        this.purchaseTimestamp = purchaseTimestamp;
+    public Order(User user, GiftCertificate giftCertificate) {
         this.user = user;
         this.giftCertificate = giftCertificate;
     }
@@ -169,6 +164,15 @@ public class Order {
      */
     public void setGiftCertificate(GiftCertificate giftCertificate) {
         this.giftCertificate = giftCertificate;
+    }
+
+    /**
+     * Auditing persist.
+     */
+    @PrePersist
+    public void onPrePersist() {
+        cost = giftCertificate.getPrice();
+        purchaseTimestamp = LocalDateTime.now();
     }
 
     @Override

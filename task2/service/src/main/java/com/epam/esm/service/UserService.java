@@ -3,8 +3,8 @@ package com.epam.esm.service;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.UserDto;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Interface provides operations with {@code UserDto} object.
@@ -24,17 +24,19 @@ public interface UserService {
     /**
      * Find all users.
      *
-     * @return list of users
+     * @param pageable the {@code Pageable} implementation
+     * @return page of users
      */
-    List<UserDto> findAllUsers();
+    Page<UserDto> findAllUsers(Pageable pageable);
 
     /**
      * Find all user's orders.
      *
-     * @param userId id of the user
-     * @return list of orders
+     * @param userId   id of the user
+     * @param pageable the {@code Pageable} implementation
+     * @return page of orders
      */
-    List<OrderDto> findAllUserOrders(long userId);
+    Page<OrderDto> findAllUserOrders(long userId, Pageable pageable);
 
     /**
      * Find the most popular tag of the user.

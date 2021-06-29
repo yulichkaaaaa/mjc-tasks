@@ -10,12 +10,14 @@ import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.GiftCertificateService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -71,7 +73,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public void createGiftCertificate(GiftCertificateDto giftCertificateDto) {
         GiftCertificate giftCertificate = giftCertificateDtoConverter.convertToEntity(giftCertificateDto);
-        giftCertificate.setCreateDate(LocalDateTime.now());
         giftCertificate.setId(giftCertificateRepository.createGiftCertificate(giftCertificate));
         updateTags(giftCertificateDto.getTags(), giftCertificate);
     }
@@ -83,15 +84,16 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public void updateGiftCertificate(GiftCertificateDto giftCertificateDto) {
         long giftCertificateId = giftCertificateDto.getId();
-        if (!giftCertificateExists(giftCertificateId)) {
-            throw new EntityNotExistException(giftCertificateId);
+        Optional<GiftCertificate> giftCertificateOptional = giftCertificateRepository
+                .findGiftCertificateById(giftCertificateId);
+        if (giftCertificateOptional.isEmpty()) {
+            throw new EntityNotFoundException(giftCertificateId);
         }
-        GiftCertificate giftCertificate = giftCertificateDtoConverter.convertToEntity(giftCertificateDto);
-        giftCertificate.setLastUpdateDate(LocalDateTime.now());
-        giftCertificateRepository.updateGiftCertificate(giftCertificate);
+        GiftCertificate giftCertificate = giftCertificateOptional.get();
+        giftCertificateRepository
+                .updateGiftCertificate(updateGiftCertificateFields(giftCertificate, giftCertificateDto));
         if (!giftCertificateDto.getTags().isEmpty()) {
-            //tagRepository.disconnectTagsFromGiftCertificate(giftCertificateId);
-            //updateTags(giftCertificateDto.getTags(), giftCertificateId);
+            updateTags(giftCertificateDto.getTags(), giftCertificate);
         }
     }
 
@@ -101,10 +103,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     @Override
     public void deleteGiftCertificateById(long giftCertificateId) {
-        if (!giftCertificateExists(giftCertificateId)) {
+        Optional<GiftCertificate> giftCertificateOptional = giftCertificateRepository
+                .findGiftCertificateById(giftCertificateId);
+        if (giftCertificateOptional.isEmpty()) {
             throw new EntityNotExistException(giftCertificateId);
         }
-        //tagRepository.disconnectTagsFromGiftCertificate(giftCertificateId);
         giftCertificateRepository.deleteGiftCertificate(giftCertificateId);
     }
 
@@ -112,20 +115,23 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * {@inheritDoc}
      */
     @Override
-    public List<GiftCertificateDto> findGiftCertificatesByCriteria(GiftCertificateDto giftCertificateDto,
+    public Page<GiftCertificateDto> findGiftCertificatesByCriteria(GiftCertificateDto giftCertificateDto,
                                                                    List<String> sortCriteria,
-                                                                   String sortDirection) {
-        String tagName = giftCertificateDto.getTag(0).getName();
+                                                                   String sortDirection,
+                                                                   Pageable pageable) {
+        List<String> tagNames = giftCertificateDto.getTags().stream().map(TagDto::getName).collect(Collectors.toList());
         List<GiftCertificate> giftCertificates = giftCertificateRepository
-                .findGiftCertificatesByCriteria(tagName, giftCertificateDto.getName(),
-                        giftCertificateDto.getDescription(), sortCriteria, sortDirection);
-        return giftCertificates
+                .findGiftCertificatesByCriteria(tagNames, giftCertificateDto.getName(),
+                        giftCertificateDto.getDescription(), sortCriteria, sortDirection,
+                        pageable.getPageNumber(), pageable.getPageSize());
+        List<GiftCertificateDto> giftCertificateDtos = giftCertificates
                 .stream()
                 .map(giftCertificate -> giftCertificateDtoConverter.convertToDto(giftCertificate, giftCertificate.getTags()
                         .stream()
                         .map(tag -> tagDtoConverter.convertToDto(tag))
                         .collect(Collectors.toSet())))
                 .collect(Collectors.toList());
+        return new PageImpl<>(giftCertificateDtos, pageable, giftCertificates.size());
     }
 
     /**
@@ -145,18 +151,27 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     /**
-     * Define if certificate is in storage.
+     * Update fields of the {@code GiftCertificate} object
+     * with non null fields of the {@code GiftCertificateDto} object.
      *
-     * @param giftCertificateId id of the certificate
-     * @return {@code true} if certificate exists in storage
+     * @param giftCertificate    the {@code GiftCertificate} object from the storage
+     * @param giftCertificateDto the {@code GiftCertificateDto} object passed by request
+     * @return the {@code GiftCertificate} object with new fields
      */
-    private boolean giftCertificateExists(long giftCertificateId) {
-        boolean isGiftCertificateExists = false;
-        Optional<GiftCertificate> giftCertificateOptional = giftCertificateRepository
-                .findGiftCertificateById(giftCertificateId);
-        if (giftCertificateOptional.isPresent()) {
-            isGiftCertificateExists = true;
+    private GiftCertificate updateGiftCertificateFields(GiftCertificate giftCertificate,
+                                                        GiftCertificateDto giftCertificateDto) {
+        if (Objects.nonNull(giftCertificateDto.getName())) {
+            giftCertificate.setName(giftCertificateDto.getName());
         }
-        return isGiftCertificateExists;
+        if (Objects.nonNull(giftCertificateDto.getDescription())) {
+            giftCertificate.setDescription(giftCertificateDto.getDescription());
+        }
+        if (Objects.nonNull(giftCertificateDto.getPrice())) {
+            giftCertificate.setPrice(giftCertificateDto.getPrice());
+        }
+        if (Objects.nonNull(giftCertificateDto.getDuration())) {
+            giftCertificate.setDuration(giftCertificateDto.getDuration());
+        }
+        return giftCertificate;
     }
 }
