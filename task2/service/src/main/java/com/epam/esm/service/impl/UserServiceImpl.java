@@ -73,7 +73,8 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(user -> userDtoConverter.convertToDto(user))
                 .collect(Collectors.toList());
-        return new PageImpl<>(users, pageable, users.size());
+        long usersCount = userRepository.countUsers();
+        return new PageImpl<>(users, pageable, usersCount);
     }
 
     /**
@@ -94,7 +95,8 @@ public class UserServiceImpl implements UserService {
                                             .collect(Collectors.toSet()));
                     return orderDtoConverter.convertToDto(order, userDto, giftCertificateDto);
                 }).collect(Collectors.toList());
-        return new PageImpl<>(orders, pageable, orders.size());
+        long ordersCount = userRepository.countUserOrders(userId);
+        return new PageImpl<>(orders, pageable, ordersCount);
     }
 
     /**

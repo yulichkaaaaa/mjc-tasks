@@ -96,4 +96,29 @@ public class JpaUserRepository implements UserRepository {
         List<Tag> tags = typedQuery.setMaxResults(1).getResultList();
         return tags.isEmpty() ? Optional.empty() : Optional.of(tags.get(0));
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long countUserOrders(long userId) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Order> order = criteriaQuery.from(Order.class);
+        Join<Order, User> user = order.join(Order_.user);
+        criteriaQuery.select(criteriaBuilder.count(order))
+                .where(criteriaBuilder.equal(user.get(User_.id), userId));
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long countUsers() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(User.class)));
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
+    }
 }

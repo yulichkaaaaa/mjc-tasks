@@ -26,7 +26,7 @@ public interface UserRepository {
      * Find all users.
      *
      * @param pageNumber number of the page
-     * @param pageSize size of the page
+     * @param pageSize   size of the page
      * @return list of users
      */
     List<User> getAllUsers(int pageNumber, int pageSize);
@@ -35,8 +35,8 @@ public interface UserRepository {
      * Find all orders of the user with given id.
      *
      * @param pageNumber number of the page
-     * @param pageSize size of the page
-     * @param userId id of the user
+     * @param pageSize   size of the page
+     * @param userId     id of the user
      * @return list of orders
      */
     List<Order> findAllUserOrders(long userId, int pageNumber, int pageSize);
@@ -48,4 +48,19 @@ public interface UserRepository {
      * @return the {@code Tag} object
      */
     Optional<Tag> findUserMostPopularTag(long userId);
+
+    /**
+     * Find count of user's orders.
+     *
+     * @param userId id of user
+     * @return count of orders
+     */
+    long countUserOrders(long userId);
+
+    /**
+     * Find count of users in the storage.
+     *
+     * @return count of users
+     */
+    long countUsers();
 }
