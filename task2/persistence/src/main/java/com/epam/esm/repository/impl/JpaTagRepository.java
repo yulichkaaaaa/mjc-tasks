@@ -38,8 +38,10 @@ public class JpaTagRepository implements TagRepository {
      * {@inheritDoc}
      */
     @Override
-    public void createTag(Tag tag) {
+    public long createTag(Tag tag) {
         entityManager.persist(tag);
+        entityManager.flush();
+        return tag.getId();
     }
 
     /**

@@ -28,12 +28,10 @@ public class TagServiceImplTest {
 
     @BeforeAll
     public void init() {
-        tagService = new TagServiceImpl();
         tagRepository = new JpaTagRepository();
         tagDtoConverter = new TagDtoConverter();
         MockitoAnnotations.openMocks(this);
-        tagService.setTagRepository(tagRepository);
-        tagService.setTagDtoConverter(tagDtoConverter);
+        tagService = new TagServiceImpl(tagRepository, tagDtoConverter);
     }
 
     @Test

@@ -59,6 +59,15 @@ public class Tag {
     }
 
     /**
+     * Setter method of the tag id.
+     *
+     * @param id id of the tag
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    /**
      * Getter method of the tag name.
      *
      * @return name of the tag

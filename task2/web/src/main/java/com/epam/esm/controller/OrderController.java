@@ -1,5 +1,7 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.response.CustomCode;
+import com.epam.esm.response.CustomResponse;
 import com.epam.esm.service.LocaleService;
 import com.epam.esm.service.OrderService;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/orders")
 public class OrderController {
 
+    private static final String ORDER_WAS_CREATED_MESSAGE = "order_was_created";
     private OrderService orderService;
     private LocaleService localeService;
 
@@ -37,8 +40,10 @@ public class OrderController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void makeOrder(@RequestParam long userId,
-                          @RequestParam long giftCertificateId) {
-        orderService.makeOrder(userId, giftCertificateId);
+    public CustomResponse makeOrder(@RequestParam long userId,
+                                    @RequestParam long giftCertificateId) {
+        long id = orderService.makeOrder(userId, giftCertificateId);
+        return new CustomResponse(CustomCode.ORDER_WAS_CREATED.code,
+                localeService.getLocaleMessage(ORDER_WAS_CREATED_MESSAGE, id));
     }
 }

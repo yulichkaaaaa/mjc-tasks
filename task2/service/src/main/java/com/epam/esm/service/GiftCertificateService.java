@@ -21,7 +21,7 @@ public interface GiftCertificateService {
      *
      * @param giftCertificateDto the {@code GiftCertificateDto} object
      */
-    void createGiftCertificate(GiftCertificateDto giftCertificateDto);
+    long createGiftCertificate(GiftCertificateDto giftCertificateDto);
 
     /**
      * Update gift certificate.

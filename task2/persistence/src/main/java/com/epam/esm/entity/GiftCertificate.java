@@ -49,6 +49,9 @@ public class GiftCertificate {
     @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
 
+    @Column(name = "deleted")
+    private boolean isDeleted;
+
     @OneToMany(mappedBy = "giftCertificate")
     private Set<Order> orders;
 
@@ -241,12 +244,39 @@ public class GiftCertificate {
     }
 
     /**
+     * Getter method of deleted flag.
+     *
+     * @return deleted flag
+     */
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    /**
+     * Setter method of deleted flag.
+     *
+     * @param deleted deleted flag
+     */
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    /**
      * Getter method of tags.
      *
      * @return set of tags
      */
     public Set<Tag> getTags() {
         return tags;
+    }
+
+    /**
+     * Setter method of tags.
+     *
+     * @param tags set of tags
+     */
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 
     /**
@@ -275,6 +305,7 @@ public class GiftCertificate {
     @PrePersist
     public void onPrePersist() {
         createDate = LocalDateTime.now();
+        isDeleted = false;
     }
 
     /**

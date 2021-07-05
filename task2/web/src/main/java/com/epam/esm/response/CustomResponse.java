@@ -1,11 +1,11 @@
-package com.epam.esm.error;
+package com.epam.esm.response;
 
 /**
  * Error entity.
  *
  * @author Shuleiko Yulia
  */
-public class CustomError {
+public class CustomResponse {
 
     private int code;
     private String message;
@@ -16,7 +16,7 @@ public class CustomError {
      * @param code    error's code
      * @param message error's message
      */
-    public CustomError(int code, String message) {
+    public CustomResponse(int code, String message) {
         this.code = code;
         this.message = message;
     }

@@ -21,6 +21,7 @@ public class GiftCertificate_ {
     public static volatile SingularAttribute<GiftCertificate, Integer> duration;
     public static volatile SingularAttribute<GiftCertificate, LocalDateTime> createDate;
     public static volatile SingularAttribute<GiftCertificate, LocalDateTime> lastUpdateDate;
+    public static volatile  SingularAttribute<GiftCertificate, Boolean> isDeleted;
     public static volatile SetAttribute<GiftCertificate, Tag> tags;
     public static volatile SetAttribute<GiftCertificate, Order> orders;
 }

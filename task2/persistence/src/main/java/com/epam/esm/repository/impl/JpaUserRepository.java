@@ -56,7 +56,7 @@ public class JpaUserRepository implements UserRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<User> getAllUsers(int pageNumber, int pageSize) {
+    public List<User> findAllUsers(int pageNumber, int pageSize) {
         Query query = entityManager.createQuery(JPQL_SELECT_ALL_USERS);
         return (List<User>) query.setMaxResults(pageSize).setFirstResult(pageNumber * pageSize).getResultList();
     }

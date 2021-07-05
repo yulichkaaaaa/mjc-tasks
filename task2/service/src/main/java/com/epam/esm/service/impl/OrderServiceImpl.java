@@ -41,11 +41,11 @@ public class OrderServiceImpl implements OrderService {
      */
     @Transactional
     @Override
-    public void makeOrder(long userId, long giftCertificateId) {
+    public long makeOrder(long userId, long giftCertificateId) {
         GiftCertificate giftCertificate = findGiftCertificateById(giftCertificateId);
         User user = findUserById(userId);
         Order order = new Order(user, giftCertificate);
-        orderRepository.createOrder(order);
+        return orderRepository.createOrder(order);
     }
 
     /**

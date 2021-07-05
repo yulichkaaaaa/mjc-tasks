@@ -115,6 +115,7 @@ public class JpaGiftCertificateRepository implements GiftCertificateRepository {
                                              SetJoin<GiftCertificate, Tag> tag, List<String> tagNames,
                                              String name, String description) {
         List<Predicate> predicates = new ArrayList<>();
+        predicates.add(criteriaBuilder.equal(giftCertificate.get(GiftCertificate_.isDeleted), false));
         predicates.add(tag.get(Tag_.name).in(tagNames));
         if (Objects.nonNull(name)) {
             predicates.add(criteriaBuilder

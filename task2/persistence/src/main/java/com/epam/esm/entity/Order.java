@@ -45,16 +45,11 @@ public class Order {
      * user and gift certificate.
      *
      * @param id                id of the order
-     * @param cost              cost of the certificate on the moment of purchase
-     * @param purchaseTimestamp date and time of order registration
      * @param user              user that made an order
      * @param giftCertificate   certificate that was ordered
      */
-    public Order(long id, BigDecimal cost, LocalDateTime purchaseTimestamp,
-                 User user, GiftCertificate giftCertificate) {
+    public Order(long id, User user, GiftCertificate giftCertificate) {
         this.id = id;
-        this.cost = cost;
-        this.purchaseTimestamp = purchaseTimestamp;
         this.user = user;
         this.giftCertificate = giftCertificate;
     }

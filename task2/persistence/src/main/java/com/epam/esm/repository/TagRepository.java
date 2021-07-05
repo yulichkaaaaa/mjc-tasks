@@ -16,7 +16,7 @@ public interface TagRepository {
      *
      * @param tag the {@code Tag} object
      */
-    void createTag(Tag tag);
+    long createTag(Tag tag);
 
     /**
      * Delete tag from storage.

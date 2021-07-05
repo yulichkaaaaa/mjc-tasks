@@ -13,5 +13,5 @@ public interface OrderService {
      * @param userId            id of the user
      * @param giftCertificateId id of the gift certificate
      */
-    void makeOrder(long userId, long giftCertificateId);
+    long makeOrder(long userId, long giftCertificateId);
 }

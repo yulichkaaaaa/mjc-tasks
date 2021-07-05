@@ -26,8 +26,6 @@ public class OrderDtoConverter {
      */
     public Order convertToEntity(OrderDto orderDto, User user, GiftCertificate giftCertificate) {
         return new Order(orderDto.getId(),
-                orderDto.getCost(),
-                orderDto.getPurchaseTimestamp(),
                 user,
                 giftCertificate);
     }

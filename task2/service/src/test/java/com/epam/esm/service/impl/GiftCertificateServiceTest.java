@@ -31,9 +31,11 @@ import java.util.HashSet;
 public class GiftCertificateServiceTest {
 
     private GiftCertificateServiceImpl giftCertificateService;
+
     @Mock
     private GiftCertificateRepository giftCertificateRepository;
     private GiftCertificateDtoConverter giftCertificateDtoConverter;
+
     @Mock
     private TagRepository tagRepository;
     private TagDtoConverter tagDtoConverter;
@@ -42,31 +44,28 @@ public class GiftCertificateServiceTest {
 
     @BeforeAll
     public void init() {
-        giftCertificateService = new GiftCertificateServiceImpl();
         setConverters();
         setRepositories();
+        giftCertificateService = new GiftCertificateServiceImpl(giftCertificateRepository,
+                tagRepository, giftCertificateDtoConverter, tagDtoConverter);
+        Set<TagDto> tags = new HashSet<>();
+        tags.add(new TagDto("chill"));
         giftCertificate = new GiftCertificate(1, "present", "some information",
                 new BigDecimal("12.32"), 12,
                 LocalDateTime.of(2019, Month.APRIL, 15, 0, 0),
-                LocalDateTime.now());
-        Set<TagDto> tags = new HashSet<>();
-        tags.add(new TagDto("chill"));
-        giftCertificateDto = giftCertificateDtoConverter.convertToDto(giftCertificate, tags);
+                LocalDateTime.now(), new HashSet<>());
+        giftCertificateDto = giftCertificateDtoConverter.convertToDto(giftCertificate);
     }
 
     private void setConverters() {
-        giftCertificateDtoConverter = new GiftCertificateDtoConverter();
         tagDtoConverter = new TagDtoConverter();
-        giftCertificateService.setTagDtoConverter(tagDtoConverter);
-        giftCertificateService.setGiftCertificateDtoConverter(giftCertificateDtoConverter);
+        giftCertificateDtoConverter = new GiftCertificateDtoConverter(tagDtoConverter);
     }
 
     private void setRepositories() {
         giftCertificateRepository = new JpaGiftCertificateRepository();
         tagRepository = new JpaTagRepository();
         MockitoAnnotations.openMocks(this);
-        giftCertificateService.setGiftCertificateRepository(giftCertificateRepository);
-        giftCertificateService.setTagRepository(tagRepository);
     }
 
     @Test
@@ -74,7 +73,7 @@ public class GiftCertificateServiceTest {
         long id = 1;
         Mockito.when(giftCertificateRepository.findGiftCertificateById(id))
                 .thenReturn(Optional.of(giftCertificate));
-        Assertions.assertEquals(giftCertificateDtoConverter.convertToDto(giftCertificate, new HashSet<>()),
+        Assertions.assertEquals(giftCertificateDtoConverter.convertToDto(giftCertificate),
                 giftCertificateService.findGiftCertificateById(id));
     }
 

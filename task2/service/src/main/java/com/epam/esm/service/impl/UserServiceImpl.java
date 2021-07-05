@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Page<UserDto> findAllUsers(Pageable pageable) {
-        List<UserDto> users = userRepository.getAllUsers(pageable.getPageNumber(), pageable.getPageSize())
+        List<UserDto> users = userRepository.findAllUsers(pageable.getPageNumber(), pageable.getPageSize())
                 .stream()
                 .map(user -> userDtoConverter.convertToDto(user))
                 .collect(Collectors.toList());

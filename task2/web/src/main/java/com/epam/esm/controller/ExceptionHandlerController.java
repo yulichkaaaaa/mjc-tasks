@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.error.CustomError;
-import com.epam.esm.error.CustomErrorCode;
+import com.epam.esm.response.CustomResponse;
+import com.epam.esm.response.CustomCode;
 import com.epam.esm.exception.pagination.IncorrectPageNumberException;
 import com.epam.esm.exception.pagination.IncorrectPageSizeException;
 import com.epam.esm.exception.pagination.NoSuchPageException;
@@ -48,8 +48,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(TooMuchPageElementsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public CustomError handleTooMuchPageElements(TooMuchPageElementsException ex) {
-        return new CustomError(CustomErrorCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
+    public CustomResponse handleTooMuchPageElements(TooMuchPageElementsException ex) {
+        return new CustomResponse(CustomCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
                 localeService.getLocaleMessage(TOO_MUCH_PAGE_ELEMENTS_ERROR, ex.getElementsCount()));
     }
 
@@ -61,8 +61,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(IncorrectPageNumberException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public CustomError handleIncorrectPageNumber(IncorrectPageNumberException ex) {
-        return new CustomError(CustomErrorCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
+    public CustomResponse handleIncorrectPageNumber(IncorrectPageNumberException ex) {
+        return new CustomResponse(CustomCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
                 localeService.getLocaleMessage(INCORRECT_PAGE_NUMBER_ERROR, ex.getPageNumber()));
     }
 
@@ -74,8 +74,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(IncorrectPageSizeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public CustomError handleIncorrectPageSize(IncorrectPageSizeException ex) {
-        return new CustomError(CustomErrorCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
+    public CustomResponse handleIncorrectPageSize(IncorrectPageSizeException ex) {
+        return new CustomResponse(CustomCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
                 localeService.getLocaleMessage(INCORRECT_PAGE_SIZE_ERROR, ex.getPageSize()));
     }
 
@@ -87,8 +87,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(NoSuchPageException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public CustomError handleNoSuchPage(NoSuchPageException ex) {
-        return new CustomError(CustomErrorCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
+    public CustomResponse handleNoSuchPage(NoSuchPageException ex) {
+        return new CustomResponse(CustomCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
                 localeService.getLocaleMessage(NO_SUCH_PAGE_ERROR, ex.getPageNumber()));
     }
 
@@ -100,7 +100,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
                                                                          HttpHeaders headers,
                                                                          HttpStatus status,
                                                                          WebRequest request) {
-        CustomError error = new CustomError(status.value(), localeService.getLocaleMessage(NOT_SUPPORTED_METHOD_ERROR));
+        CustomResponse error = new CustomResponse(status.value(), localeService.getLocaleMessage(NOT_SUPPORTED_METHOD_ERROR));
         return new ResponseEntity<>(error, status);
     }
 
@@ -113,7 +113,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
                                                              HttpHeaders headers,
                                                              HttpStatus status,
                                                              WebRequest request) {
-        CustomError error = new CustomError(status.value(), localeService.getLocaleMessage(GENERAL_ERROR));
+        CustomResponse error = new CustomResponse(status.value(), localeService.getLocaleMessage(GENERAL_ERROR));
         return new ResponseEntity<>(error, status);
     }
 }

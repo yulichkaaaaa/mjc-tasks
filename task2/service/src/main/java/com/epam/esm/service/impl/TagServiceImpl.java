@@ -37,14 +37,14 @@ public class TagServiceImpl implements TagService {
      */
     @Transactional
     @Override
-    public void createTag(TagDto tagDto) {
+    public long createTag(TagDto tagDto) {
         String name = tagDto.getName();
         Optional<Tag> tagOptional = tagRepository.findTagByName(name);
         if (tagOptional.isPresent()) {
             throw new EntityAlreadyExistsException(tagOptional.get().getId());
         }
         Tag tag = tagDtoConverter.convertToEntity(tagDto);
-        tagRepository.createTag(tag);
+        return tagRepository.createTag(tag);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.epam.esm.error;
+package com.epam.esm.response;
 
 /**
  * Custom codes of errors.
@@ -8,9 +8,15 @@ package com.epam.esm.error;
  *
  * @author Shuleiko Yulia
  */
-public enum CustomErrorCode {
+public enum CustomCode {
+
+    TAG_WAS_CREATED(20101),
+    GIFT_CERTIFICATE_WAS_CREATED(20102),
+    ORDER_WAS_CREATED(20104),
+    GIFT_CERTIFICATE_WAS_UPDATED(20402),
+    GIFT_CERTIFICATE_WAS_DELETED(20402),
+    TAG_WAS_DELETED(20401),
     TAG_NOT_FOUND(40401),
-    TAG_ALREADY_EXISTS(40001),
     TAG_NOT_EXIST(40001),
     TAG_FIELDS_NOT_VALID(40001),
     GIFT_CERTIFICATE_NOT_FOUND(40402),
@@ -27,7 +33,7 @@ public enum CustomErrorCode {
      *
      * @param code custom code of the error
      */
-    CustomErrorCode(int code) {
+    CustomCode(int code) {
         this.code = code;
     }
 }

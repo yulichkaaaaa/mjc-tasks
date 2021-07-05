@@ -5,6 +5,7 @@ import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.converters.GiftCertificateDtoConverter;
 import com.epam.esm.dto.converters.TagDtoConverter;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.GiftCertificateRepository;
@@ -55,7 +56,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDto findGiftCertificateById(long giftCertificateId) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateRepository
                 .findGiftCertificateById(giftCertificateId);
-        if (giftCertificateOptional.isEmpty()) {
+        if (giftCertificateOptional.isEmpty() || giftCertificateOptional.get().isDeleted()) {
             throw new EntityNotFoundException(giftCertificateId);
         }
         GiftCertificate giftCertificate = giftCertificateOptional.get();
@@ -71,10 +72,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      */
     @Transactional
     @Override
-    public void createGiftCertificate(GiftCertificateDto giftCertificateDto) {
-        GiftCertificate giftCertificate = giftCertificateDtoConverter.convertToEntity(giftCertificateDto);
-        giftCertificate.setId(giftCertificateRepository.createGiftCertificate(giftCertificate));
+    public long createGiftCertificate(GiftCertificateDto giftCertificateDto) {
+        GiftCertificate giftCertificate = giftCertificateDtoConverter
+                .convertToEntity(giftCertificateDto);
         updateTags(giftCertificateDto.getTags(), giftCertificate);
+        return giftCertificateRepository.createGiftCertificate(giftCertificate);
     }
 
     /**
@@ -86,15 +88,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         long giftCertificateId = giftCertificateDto.getId();
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateRepository
                 .findGiftCertificateById(giftCertificateId);
-        if (giftCertificateOptional.isEmpty()) {
-            throw new EntityNotFoundException(giftCertificateId);
+        if (giftCertificateOptional.isEmpty() || giftCertificateOptional.get().isDeleted()) {
+            throw new EntityNotExistException(giftCertificateId);
         }
         GiftCertificate giftCertificate = giftCertificateOptional.get();
         giftCertificateRepository
                 .updateGiftCertificate(updateGiftCertificateFields(giftCertificate, giftCertificateDto));
-        if (!giftCertificateDto.getTags().isEmpty()) {
-            updateTags(giftCertificateDto.getTags(), giftCertificate);
-        }
+        updateTags(giftCertificateDto.getTags(), giftCertificate);
     }
 
     /**
@@ -105,10 +105,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public void deleteGiftCertificateById(long giftCertificateId) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateRepository
                 .findGiftCertificateById(giftCertificateId);
-        if (giftCertificateOptional.isEmpty()) {
+        if (giftCertificateOptional.isEmpty() || giftCertificateOptional.get().isDeleted()) {
             throw new EntityNotExistException(giftCertificateId);
         }
-        giftCertificateRepository.deleteGiftCertificate(giftCertificateId);
+        GiftCertificate giftCertificate = giftCertificateOptional.get();
+        giftCertificate.setDeleted(true);
+        giftCertificateRepository.updateGiftCertificate(giftCertificate);
     }
 
     /**
@@ -137,17 +139,19 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     /**
      * Insert new tags into the storage and create connections between certificate and tag.
      *
-     * @param tags            set of tags
+     * @param tagDtos         set of tags
      * @param giftCertificate the {@code GiftCertificate} object
      */
-    private void updateTags(Set<TagDto> tags, GiftCertificate giftCertificate) {
-        tags.stream()
+    private void updateTags(Set<TagDto> tagDtos, GiftCertificate giftCertificate) {
+        tagDtos.stream()
                 .filter(tag -> tagRepository.findTagByName(tag.getName()).isEmpty())
                 .forEach(tag -> tagRepository.createTag(tagDtoConverter.convertToEntity(tag)));
-        tags.forEach(tag -> tag.setId(tagRepository.findTagByName(tag.getName()).get().getId()));
-        tags.stream()
+        Set<Tag> tags = tagDtos
+                .stream()
                 .map(tagDto -> tagDtoConverter.convertToEntity(tagDto))
-                .forEach(giftCertificate::addTag);
+                .collect(Collectors.toSet());
+        tags.forEach(tag -> tag.setId(tagRepository.findTagByName(tag.getName()).get().getId()));
+        giftCertificate.setTags(tags);
     }
 
     /**

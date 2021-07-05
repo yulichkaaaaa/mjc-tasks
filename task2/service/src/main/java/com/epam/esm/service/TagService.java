@@ -14,7 +14,7 @@ public interface TagService {
      *
      * @param tagDto the {@code TagDto} object
      */
-    void createTag(TagDto tagDto);
+    long createTag(TagDto tagDto);
 
     /**
      * Delete tag by it's id.

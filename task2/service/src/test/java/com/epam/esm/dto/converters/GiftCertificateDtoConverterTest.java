@@ -16,12 +16,14 @@ import java.util.HashSet;
 public class GiftCertificateDtoConverterTest {
 
     private GiftCertificateDtoConverter giftCertificateDtoConverter;
+    private TagDtoConverter tagDtoConverter;
     private GiftCertificateDto giftCertificateDto;
     private GiftCertificate giftCertificate;
 
     @BeforeAll
     public void init(){
-        giftCertificateDtoConverter = new GiftCertificateDtoConverter();
+        tagDtoConverter = new TagDtoConverter();
+        giftCertificateDtoConverter = new GiftCertificateDtoConverter(tagDtoConverter);
         initGiftCertificateData();
     }
 
@@ -35,13 +37,13 @@ public class GiftCertificateDtoConverterTest {
         giftCertificateDto = new GiftCertificateDto(name, description, price,
                 duration, createDate, lastUpdateDate, new HashSet<>());
         giftCertificate = new GiftCertificate(name, description, price,
-                duration, createDate, lastUpdateDate);
+                duration, createDate, lastUpdateDate, new HashSet<>());
     }
 
     @Test
     public void convertToDtoTest(){
         Assertions.assertEquals(giftCertificateDto,
-                giftCertificateDtoConverter.convertToDto(giftCertificate, new HashSet<>()));
+                giftCertificateDtoConverter.convertToDto(giftCertificate));
     }
 
     @Test

@@ -29,7 +29,7 @@ public interface UserRepository {
      * @param pageSize   size of the page
      * @return list of users
      */
-    List<User> getAllUsers(int pageNumber, int pageSize);
+    List<User> findAllUsers(int pageNumber, int pageSize);
 
     /**
      * Find all orders of the user with given id.

@@ -2,8 +2,8 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.UserDto;
-import com.epam.esm.error.CustomError;
-import com.epam.esm.error.CustomErrorCode;
+import com.epam.esm.response.CustomResponse;
+import com.epam.esm.response.CustomCode;
 import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.exception.pagination.NoSuchPageException;
@@ -135,8 +135,8 @@ public class UserController {
      */
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public CustomError handleUserNotFound(EntityNotFoundException ex) {
-        return new CustomError(CustomErrorCode.USER_NOT_FOUND.code,
+    public CustomResponse handleUserNotFound(EntityNotFoundException ex) {
+        return new CustomResponse(CustomCode.USER_NOT_FOUND.code,
                 localeService.getLocaleMessage(ENTITY_NOT_FOUND_ERROR, ex.getId()));
     }
 
@@ -148,8 +148,8 @@ public class UserController {
      */
     @ExceptionHandler(EntityNotExistException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public CustomError handleUserNotExist(EntityNotExistException ex) {
-        return new CustomError(CustomErrorCode.USER_NOT_EXIST.code,
+    public CustomResponse handleUserNotExist(EntityNotExistException ex) {
+        return new CustomResponse(CustomCode.USER_NOT_EXIST.code,
                 localeService.getLocaleMessage(ENTITY_NOT_EXIST_ERROR, ex.getId()));
     }
 }
