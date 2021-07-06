@@ -59,4 +59,13 @@ public interface GiftCertificateRepository {
                                                          List<String> sortCriteria, String sortDirection,
                                                          int pageNumber, int pageSize);
 
+    /**
+     * Find count of gift certificates with given search criteria.
+     *
+     * @param tagNames      part of names of tags
+     * @param name          part of name of gift certificate
+     * @param description   part of description of gift certificate
+     * @return list of gift certificates
+     */
+    long countGiftCertificates(List<String> tagNames, String name, String description);
 }

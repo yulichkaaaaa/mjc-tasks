@@ -96,11 +96,39 @@ public class JpaGiftCertificateRepository implements GiftCertificateRepository {
         criteriaQuery
                 .select(giftCertificate)
                 .where(searchCriteria)
-                .groupBy(giftCertificate.get(GiftCertificate_.id))
-                .having(criteriaBuilder.count(giftCertificate).in(tagNames.size()))
-                .orderBy(sortOrder);
+                .groupBy(giftCertificate.get(GiftCertificate_.id));
+        if (!tagNames.isEmpty()) {
+            criteriaQuery
+                    .having(criteriaBuilder.count(giftCertificate).in(tagNames.size()));
+        }
+        if (!sortOrder.isEmpty()) {
+            criteriaQuery.orderBy(sortOrder);
+        }
         TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(criteriaQuery);
         return typedQuery.setMaxResults(pageSize).setFirstResult(pageNumber * pageSize).getResultList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long countGiftCertificates(List<String> tagNames, String name, String description) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
+        Root<GiftCertificate> giftCertificate = criteriaQuery.from(GiftCertificate.class);
+        SetJoin<GiftCertificate, Tag> tag = giftCertificate.join(GiftCertificate_.tags);
+        Predicate[] searchCriteria
+                = defineSearchCriteria(criteriaBuilder, giftCertificate, tag, tagNames, name, description);
+        criteriaQuery
+                .select(giftCertificate)
+                .where(searchCriteria)
+                .groupBy(giftCertificate.get(GiftCertificate_.id));
+        if (!tagNames.isEmpty()) {
+            criteriaQuery
+                    .having(criteriaBuilder.count(giftCertificate).in(tagNames.size()));
+        }
+        TypedQuery<GiftCertificate> typedQuery = entityManager.createQuery(criteriaQuery);
+        return typedQuery.getResultList().size();
     }
 
     /**
@@ -116,7 +144,9 @@ public class JpaGiftCertificateRepository implements GiftCertificateRepository {
                                              String name, String description) {
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(criteriaBuilder.equal(giftCertificate.get(GiftCertificate_.isDeleted), false));
-        predicates.add(tag.get(Tag_.name).in(tagNames));
+        if (!tagNames.isEmpty()) {
+            predicates.add(tag.get(Tag_.name).in(tagNames));
+        }
         if (Objects.nonNull(name)) {
             predicates.add(criteriaBuilder
                     .like(giftCertificate.get(GiftCertificate_.name), "%" + name + "%"));
@@ -139,8 +169,11 @@ public class JpaGiftCertificateRepository implements GiftCertificateRepository {
                                         List<String> sortCriteria, String sortDirection) {
         List<Order> sortOrder = new ArrayList<>();
         for (String criteria : sortCriteria) {
-            Path<String> path = giftCertificate.get(criteria);
-            sortOrder.add(sortDirection.equals(SORT_DIRECTION_DESC) ? criteriaBuilder.desc(path) : criteriaBuilder.asc(path));
+            if (!criteria.isEmpty()) {
+                Path<String> path = giftCertificate.get(criteria);
+                sortOrder.add(sortDirection.equals(SORT_DIRECTION_DESC) ?
+                        criteriaBuilder.desc(path) : criteriaBuilder.asc(path));
+            }
         }
         return sortOrder;
     }

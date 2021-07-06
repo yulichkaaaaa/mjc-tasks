@@ -8,7 +8,7 @@ import com.epam.esm.dto.converters.TagDtoConverter;
 import com.epam.esm.dto.converters.UserDtoConverter;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.User;
-import com.epam.esm.exception.EntityNotExistException;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -51,7 +51,7 @@ public class UserServiceImplTest {
         userDtoConverter = new UserDtoConverter();
         orderDtoConverter = new OrderDtoConverter();
         tagDtoConverter = new TagDtoConverter();
-        giftCertificateDtoConverter = new GiftCertificateDtoConverter(tagDtoConverter);
+        giftCertificateDtoConverter = new GiftCertificateDtoConverter();
     }
 
     @Test
@@ -62,9 +62,9 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void findUserByIdNotExistTest() {
+    public void findUserByIdNotFoundTest() {
         Mockito.when(userRepository.findUserById(user.getId())).thenReturn(Optional.empty());
-        Assertions.assertThrows(EntityNotExistException.class, () -> userService.findUserById(user.getId()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.findUserById(user.getId()));
     }
 
     @Test

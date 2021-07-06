@@ -11,7 +11,7 @@ public class CustomResponse {
     private String message;
 
     /**
-     * Constructs error with given code and message.
+     * Constructs response entity with given code and message.
      *
      * @param code    error's code
      * @param message error's message
@@ -22,18 +22,18 @@ public class CustomResponse {
     }
 
     /**
-     * Getter method of the error's code.
+     * Getter method of the response code.
      *
-     * @return error's code
+     * @return response code
      */
     public int getCode() {
         return code;
     }
 
     /**
-     * Getter method of the error's message.
+     * Getter method of the response message.
      *
-     * @return error's message
+     * @return response message
      */
     public String getMessage() {
         return message;

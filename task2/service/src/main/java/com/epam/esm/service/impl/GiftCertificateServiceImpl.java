@@ -133,7 +133,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                         .map(tag -> tagDtoConverter.convertToDto(tag))
                         .collect(Collectors.toSet())))
                 .collect(Collectors.toList());
-        return new PageImpl<>(giftCertificateDtos, pageable, giftCertificates.size());
+        long giftCertificatesCount = giftCertificateRepository.countGiftCertificates(tagNames,
+                giftCertificateDto.getName(), giftCertificateDto.getDescription());
+        return new PageImpl<>(giftCertificateDtos, pageable, giftCertificatesCount);
     }
 
     /**

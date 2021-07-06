@@ -20,7 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class GiftCertificateModelAssembler extends RepresentationModelAssemblerSupport<GiftCertificateDto, GiftCertificateModel> {
 
     private TagModelAssembler tagModelAssembler;
-    private static final String FIND_CERTIFICATES_LINK = "find certificates";
+    private static final String FIND_GIFT_CERTIFICATES_LINK = "findGiftCertificates";
 
     /**
      * Creates a new {@link RepresentationModelAssemblerSupport} using
@@ -42,7 +42,7 @@ public class GiftCertificateModelAssembler extends RepresentationModelAssemblerS
                         .findGiftCertificateById(giftCertificateModel.getId())).withSelfRel(),
                 linkTo(methodOn(GiftCertificateController.class)
                         .findCertificates(null, null, null, null, null, 1, 5))
-                        .withRel(FIND_CERTIFICATES_LINK)
+                        .withRel(FIND_GIFT_CERTIFICATES_LINK)
         );
         return giftCertificateModel;
     }

@@ -53,13 +53,13 @@ public class GiftCertificateServiceTest {
         giftCertificate = new GiftCertificate(1, "present", "some information",
                 new BigDecimal("12.32"), 12,
                 LocalDateTime.of(2019, Month.APRIL, 15, 0, 0),
-                LocalDateTime.now(), new HashSet<>());
-        giftCertificateDto = giftCertificateDtoConverter.convertToDto(giftCertificate);
+                LocalDateTime.now());
+        giftCertificateDto = giftCertificateDtoConverter.convertToDto(giftCertificate, tags);
     }
 
     private void setConverters() {
+        giftCertificateDtoConverter = new GiftCertificateDtoConverter();
         tagDtoConverter = new TagDtoConverter();
-        giftCertificateDtoConverter = new GiftCertificateDtoConverter(tagDtoConverter);
     }
 
     private void setRepositories() {
@@ -73,7 +73,7 @@ public class GiftCertificateServiceTest {
         long id = 1;
         Mockito.when(giftCertificateRepository.findGiftCertificateById(id))
                 .thenReturn(Optional.of(giftCertificate));
-        Assertions.assertEquals(giftCertificateDtoConverter.convertToDto(giftCertificate),
+        Assertions.assertEquals(giftCertificateDtoConverter.convertToDto(giftCertificate, new HashSet<>()),
                 giftCertificateService.findGiftCertificateById(id));
     }
 
@@ -97,18 +97,6 @@ public class GiftCertificateServiceTest {
     }
 
     @Test
-    public void updateGiftCertificateTest() {
-        Mockito.when(giftCertificateRepository.findGiftCertificateById(giftCertificateDto.getId()))
-                .thenReturn(Optional.of(giftCertificate));
-        Tag tag = tagDtoConverter.convertToEntity(giftCertificateDto.getTag(0));
-        Mockito.when(tagRepository.findTagByName(tag.getName()))
-                .thenReturn(Optional.of(tag));
-        giftCertificateService.updateGiftCertificate(giftCertificateDto);
-        Mockito.verify(giftCertificateRepository, Mockito.times(1))
-                .updateGiftCertificate(Mockito.any());
-    }
-
-    @Test
     public void updateGiftCertificateNotExistTest() {
         Mockito.when(giftCertificateRepository.findGiftCertificateById(giftCertificateDto.getId()))
                 .thenReturn(Optional.empty());
@@ -123,7 +111,7 @@ public class GiftCertificateServiceTest {
                 .thenReturn(Optional.of(giftCertificate));
         giftCertificateService.deleteGiftCertificateById(id);
         Mockito.verify(giftCertificateRepository, Mockito.times(1))
-                .deleteGiftCertificate(id);
+                .updateGiftCertificate(Mockito.any());
     }
 
     @Test

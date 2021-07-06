@@ -1,10 +1,11 @@
 package com.epam.esm.response;
 
 /**
- * Custom codes of errors.
+ * Custom codes of response.
  * First 3 digits represent response status.
  * Two last digits represent entity code:
- * 01 - tag, 02 - gift certificate, 03 - user, 04 - order.
+ * 00 - general, 01 - tag, 02 - gift certificate,
+ * 03 - user, 04 - order.
  *
  * @author Shuleiko Yulia
  */
@@ -24,7 +25,11 @@ public enum CustomCode {
     GIFT_CERTIFICATE_NOT_EXIST(40002),
     GIFT_CERTIFICATE_FIELDS_NOT_VALID(40002),
     USER_NOT_FOUND(40403),
-    USER_NOT_EXIST(40403);
+    USER_NOT_EXIST(40403),
+    INCORRECT_PAGE_NUMBER(40000),
+    INCORRECT_PAGE_SIZE(40000),
+    TOO_MUCH_PAGE_ELEMENTS(40000),
+    NO_SUCH_PAGE_EXCEPTION(40400);
 
     public final int code;
 

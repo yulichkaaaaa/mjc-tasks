@@ -4,7 +4,6 @@ import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.response.CustomCode;
 import com.epam.esm.response.CustomResponse;
-import com.epam.esm.exception.EntityAlreadyExistsException;
 import com.epam.esm.exception.EntityNotExistException;
 import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.exception.NotValidFieldsException;
@@ -29,9 +28,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -50,7 +52,6 @@ public class GiftCertificateController {
 
     private static final String ENTITY_NOT_FOUND_ERROR = "entity_not_found";
     private static final String ENTITY_NOT_EXIST_ERROR = "entity_not_exist";
-    private static final String ENTITY_ALREADY_EXISTS_ERROR = "entity_already_exists";
     private static final String GIFT_CERTIFICATE_WAS_CREATED_MESSAGE = "gift_certificate_was_created";
     private static final String GIFT_CERTIFICATE_WAS_UPDATED_MESSAGE = "gift_certificate_was_updated";
     private static final String GIFT_CERTIFICATE_WAS_DELETED_MESSAGE = "gift_certificate_was_deleted";
@@ -91,7 +92,7 @@ public class GiftCertificateController {
      * @param id id of the gift certificate
      * @return the {@code GiftCertificateDto} object
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     public GiftCertificateModel findGiftCertificateById(@PathVariable long id) {
         return giftCertificateModelAssembler.toModel(giftCertificateService.findGiftCertificateById(id));
     }
@@ -101,7 +102,7 @@ public class GiftCertificateController {
      *
      * @param id id of the gift certificate
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public CustomResponse deleteGiftCertificateById(@PathVariable long id) {
         giftCertificateService.deleteGiftCertificateById(id);
         return new CustomResponse(CustomCode.GIFT_CERTIFICATE_WAS_DELETED.code,
@@ -114,7 +115,7 @@ public class GiftCertificateController {
      * @param giftCertificateDto the {@code GiftCertificateDto} object
      * @param bindingResult      the {@code BindingResult} object
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CustomResponse createGiftCertificate(@RequestBody @Valid GiftCertificateDto giftCertificateDto,
                                             BindingResult bindingResult) {
@@ -132,7 +133,7 @@ public class GiftCertificateController {
      * @param giftCertificateDto the {@code GiftCertificateDto} object
      * @param bindingResult      the {@code BindingResult} object
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
+    @PatchMapping(value = "/{id}")
     public CustomResponse updateGiftCertificate(@PathVariable long id,
                                       @RequestBody @Valid GiftCertificateDto giftCertificateDto,
                                       BindingResult bindingResult) {
@@ -153,7 +154,7 @@ public class GiftCertificateController {
      * @param giftCertificateDescription part of the description of the certificate
      * @return list of the certificates
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public PagedModel<GiftCertificateModel> findCertificates(@RequestParam(required = false) String tagNames,
                                                              @RequestParam(required = false) String giftCertificateName,
                                                              @RequestParam(required = false) String giftCertificateDescription,
@@ -220,19 +221,6 @@ public class GiftCertificateController {
     public CustomResponse handleGiftCertificateNotFound(EntityNotFoundException ex) {
         return new CustomResponse(CustomCode.GIFT_CERTIFICATE_NOT_FOUND.code,
                 localeService.getLocaleMessage(ENTITY_NOT_FOUND_ERROR, ex.getId()));
-    }
-
-    /**
-     * Handle the {@code EntityAlreadyExistsException}.
-     *
-     * @param ex the {@code EntityAlreadyExistsException} object
-     * @return the {@code CustomError} object
-     */
-    @ExceptionHandler(EntityAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public CustomResponse handleGiftCertificateAlreadyExists(EntityAlreadyExistsException ex) {
-        return new CustomResponse(CustomCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
-                localeService.getLocaleMessage(ENTITY_ALREADY_EXISTS_ERROR, ex.getId()));
     }
 
     /**

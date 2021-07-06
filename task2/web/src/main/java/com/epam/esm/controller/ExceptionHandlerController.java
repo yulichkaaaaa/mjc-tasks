@@ -49,7 +49,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TooMuchPageElementsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CustomResponse handleTooMuchPageElements(TooMuchPageElementsException ex) {
-        return new CustomResponse(CustomCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
+        return new CustomResponse(CustomCode.TOO_MUCH_PAGE_ELEMENTS.code,
                 localeService.getLocaleMessage(TOO_MUCH_PAGE_ELEMENTS_ERROR, ex.getElementsCount()));
     }
 
@@ -62,7 +62,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IncorrectPageNumberException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CustomResponse handleIncorrectPageNumber(IncorrectPageNumberException ex) {
-        return new CustomResponse(CustomCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
+        return new CustomResponse(CustomCode.INCORRECT_PAGE_NUMBER.code,
                 localeService.getLocaleMessage(INCORRECT_PAGE_NUMBER_ERROR, ex.getPageNumber()));
     }
 
@@ -75,7 +75,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IncorrectPageSizeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CustomResponse handleIncorrectPageSize(IncorrectPageSizeException ex) {
-        return new CustomResponse(CustomCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
+        return new CustomResponse(CustomCode.INCORRECT_PAGE_SIZE.code,
                 localeService.getLocaleMessage(INCORRECT_PAGE_SIZE_ERROR, ex.getPageSize()));
     }
 
@@ -88,7 +88,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NoSuchPageException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CustomResponse handleNoSuchPage(NoSuchPageException ex) {
-        return new CustomResponse(CustomCode.GIFT_CERTIFICATE_ALREADY_EXISTS.code,
+        return new CustomResponse(CustomCode.NO_SUCH_PAGE_EXCEPTION.code,
                 localeService.getLocaleMessage(NO_SUCH_PAGE_ERROR, ex.getPageNumber()));
     }
 
